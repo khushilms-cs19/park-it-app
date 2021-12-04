@@ -14,9 +14,13 @@ import BookingSuccessScreen from '../screens/Stack-Application-screens/BookingSu
 import CurrentBookingScreen from '../screens/Stack-Application-screens/CurrentBookingScreen';
 import { Ionicons } from "@expo/vector-icons";
 import { TransitionPresets } from 'react-navigation-stack';
-const MainApplicationNavigator = createStackNavigator({
+
+const initialStackNavigator = createStackNavigator({
     Welcome: {
         screen: WelcomeScreen,
+        navigationOptions: {
+            headerTitle: "Parkit!"
+        }
     },
     AccountSelect: {
         screen: AccountSelectScreen,
@@ -27,6 +31,34 @@ const MainApplicationNavigator = createStackNavigator({
     Login: {
         screen: LoginScreen,
     },
+}, {
+        navigationOptions: (navData)=>{
+            return {
+                headerLeft: null,
+                        // <Ionicons name="arrow-back" size={24} color="white" onPress={()=>navData.navigation.goBack()}/>,
+                transitionSpec: {
+                    open: TransitionPresets.SlideFromRightIOS,
+                    close: TransitionPresets.SlideFromRightIOS,
+                }
+            }
+        },
+        defaultNavigationOptions: {
+            gestureDirection: "horizontal",
+            animationEnabled: "true",
+            headerStyle: {
+                backgroundColor: "black",
+            },
+            headerTitleStyle: {
+                fontFamily: "open-sans-bold",
+                color: "white",
+                textAlign: "center",
+            },
+            headerTitleColor: "white",
+            headerLeft: ()=>null,
+        }
+})
+
+const MainApplicationNavigator = createStackNavigator({
     Main: {
         screen: MainScreen,
     },
@@ -72,4 +104,7 @@ const MainApplicationNavigator = createStackNavigator({
     }
 });
 
-export default MainApplicationNavigator;
+export {
+    MainApplicationNavigator,
+    initialStackNavigator,
+};

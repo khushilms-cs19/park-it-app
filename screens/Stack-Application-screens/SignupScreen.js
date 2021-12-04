@@ -1,9 +1,12 @@
 import React from 'react'
 import { StyleSheet, Text, View, Button } from 'react-native'
-import { StackActions, NavigationActions } from 'react-navigation'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import { StackActions, NavigationActions } from 'react-navigation';
+import {Ionicons} from "@expo/vector-icons";
 const SignupScreen = (props) => {
     return (
         <View style={styles.screen}>
+            
             <Text>This is the signup screen</Text>
             <Button title="Sign Up" onPress={() =>{
                 const navigateAction = StackActions.reset({
@@ -24,4 +27,5 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },  
+    
 })
