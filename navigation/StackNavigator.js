@@ -19,11 +19,24 @@ const initialStackNavigator = createStackNavigator({
     Welcome: {
         screen: WelcomeScreen,
         navigationOptions: {
-            headerTitle: "Parkit!"
+            headerShown: false,
         }
     },
     AccountSelect: {
         screen: AccountSelectScreen,
+        navigationOptions: {
+            headerTitle: "Parkit!",
+            headerStyle: {
+                backgroundColor: "white",
+            },
+            headerTitleStyle: {
+                color: "black",
+                fontFamily: "open-sans-bold",
+                textAlign: "center",
+                fontSize: 30,
+            },
+
+        }
     },
     SignUp: {
         screen: SignupScreen,
