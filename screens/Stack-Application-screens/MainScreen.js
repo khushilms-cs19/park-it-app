@@ -16,18 +16,18 @@ const MainScreen = (props) => {
             <View style={styles.topContainer}>
                 <View style={styles.topNavigation}>
                     <TouchableOpacity >
-                        <DefaultText fontSize={16} color="white">Settings</DefaultText>
+                        <DefaultText fontSize={14} color="white">Settings</DefaultText>
                     </TouchableOpacity>
                     <TouchableOpacity>
                         <DefaultText fontSize={28} color="white">Profile</DefaultText>
                     </TouchableOpacity>
                     <TouchableOpacity>
-                        <DefaultText fontSize={16} color="white">Logout</DefaultText>
+                        <DefaultText fontSize={14} color="white">Logout</DefaultText>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.profileImageContainer}>
                     <Image 
-                        source={{uri:"https://indianmemetemplates.com/wp-content/uploads/phir-hera-pheri-akshay-waiting-pose-.jpg"}}
+                        source={{uri:"https://memetemplatehouse.com/wp-content/uploads/2020/05/main-toh-sirf-pati-banna-chahta-hun-shyam-hera-pheri.jpg"}}
                         fadeDuration={1000}
                         style={styles.profileImage}
                         resizeMode="cover"
@@ -35,11 +35,14 @@ const MainScreen = (props) => {
                 </View>
             </View>
             <View style={styles.nameContainer}>
-                <Text style={styles.nameMain}>ITUS Raju</Text>
-                <Text style={styles.nameMantra}>21 din main paisa double</Text>
+                <Text style={styles.nameMain}>Ghanshyam</Text>
+                <Text style={styles.nameMantra}>Aapka naam bhi Anuradha hai</Text>
             </View>
             <View style={styles.buttonsContainer}>
-                <MainScreenButton width={Dimensions.get("window").width*0.8}>
+                <MainScreenButton width={Dimensions.get("window").width*0.8}
+                    onPress={() => props.navigation.navigate("LocationSelect")}
+                    navigation={props.navigation}
+                >
                     <Text style={styles.buttonText}>Book a parking space</Text>
                     <FontAwesome5 name="car-side" size={24} color="#ccc"/>
                 </MainScreenButton>

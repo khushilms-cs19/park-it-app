@@ -76,6 +76,9 @@ const MainApplicationNavigator = createStackNavigator({
     },
     LocationSelect: {
         screen: LocationSelectScreen,
+        navigationOptions: {
+            headerShown: false,
+        }
     },
     LocationSelectMap: {
         screen: LocationSelectMapScreen,
