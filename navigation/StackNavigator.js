@@ -51,16 +51,6 @@ const initialStackNavigator = createStackNavigator({
         }
     },
 }, {
-        navigationOptions: (navData)=>{
-            return {
-                headerLeft: null,
-                        // <Ionicons name="arrow-back" size={24} color="white" onPress={()=>navData.navigation.goBack()}/>,
-                transitionSpec: {
-                    open: TransitionPresets.SlideFromRightIOS,
-                    close: TransitionPresets.SlideFromRightIOS,
-                }
-            }
-        },
         defaultNavigationOptions: {
             gestureDirection: "horizontal",
             animationEnabled: "true",
@@ -80,6 +70,9 @@ const initialStackNavigator = createStackNavigator({
 const MainApplicationNavigator = createStackNavigator({
     Main: {
         screen: MainScreen,
+        navigationOptions: {
+            headerShown: false,
+        }
     },
     LocationSelect: {
         screen: LocationSelectScreen,

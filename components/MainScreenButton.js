@@ -1,33 +1,35 @@
 import React from 'react'
 import { StyleSheet, Text, View,TouchableOpacity } from 'react-native'
 
-const CustomBigButton = (props) => {
+const MainScreenButton = (props) => {
     const plainFiller = ()=>{}
     return (
         <View style={styles.signupButtonContainer}>
             <TouchableOpacity style={{...styles.signupButton, width: props.width || 200 }} 
                 onPress={props.onPress || plainFiller}>
-                <Text style={styles.signupText}>{props.children}</Text>
+            {props.children}
             </TouchableOpacity>
         </View>
     )
 }
 
-export default CustomBigButton;
+export default MainScreenButton;
 
 const styles = StyleSheet.create({
     signupButtonContainer:{
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
-        marginVertical: 30,
+        marginVertical: 10,
     },
     signupButton: {
+        flexDirection: "row",
         backgroundColor: "black",
-        height: 50,
         borderRadius: 15,
-        justifyContent: "center",
+        justifyContent: "space-between",
         alignItems: "center",
+        paddingHorizontal: 30,
+        paddingVertical: 15,
     }, 
     signupText: {
         color: "white",
