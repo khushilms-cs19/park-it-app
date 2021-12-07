@@ -40,9 +40,15 @@ const initialStackNavigator = createStackNavigator({
     },
     SignUp: {
         screen: SignupScreen,
+        navigationOptions: {
+            headerShown: false,
+        }
     },
     Login: {
         screen: LoginScreen,
+        navigationOptions: {
+            headerShown: false,
+        }
     },
 }, {
         navigationOptions: (navData)=>{

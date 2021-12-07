@@ -11,11 +11,11 @@ const AccountSelectScreen = (props) => {
             <ShadowBox>
                 <Text style={styles.centerText}>Do you have an account?</Text>
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={{...styles.buttonMain, backgroundColor: "black"}} onPress={()=>props.navigation.navigate("Login")}>
+                    <TouchableOpacity style={{...styles.buttonMain, backgroundColor: "black"}} onPress={()=>props.navigation.navigate("SignUp")}>
                         <Entypo name="cross" size={24} color="white" />
                         <Text style={{...styles.buttonMainText, color: "white"}}>No</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{...styles.buttonMain, backgroundColor: "white"}} onPress={()=>props.navigation.navigate("SignUp")}>
+                    <TouchableOpacity style={{...styles.buttonMain, backgroundColor: "white"}}  onPress={()=>props.navigation.navigate("Login")}>
                         <Feather name="check" size={24} color="black" />
                         <Text style={{...styles.buttonMainText}} >Yes</Text>
                     </TouchableOpacity>
