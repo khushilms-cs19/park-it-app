@@ -104,7 +104,7 @@ const LocationSelectScreen = (props) => {
             </View>
             <View style={styles.searchLocationMain}>
                 <View style={styles.searchLocationContainer}>
-                    <TextInput placeholder={"Enter the destination..."} onChangeText={searchForLocations} value={locationSearch}/>
+                    <TextInput placeholder={"Enter the destination..."} onChangeText={searchForLocations} value={locationSearch} style={{width:"90%"}}/>
                     <Ionicons name="ios-search" size={24} color="#bbb" />
                 </View>
                 <View>
