@@ -17,10 +17,9 @@ export default CustomBigButton;
 
 const styles = StyleSheet.create({
     signupButtonContainer:{
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
+        flex: 1,
         marginVertical: 30,
+        alignItems: "center",
     },
     signupButton: {
         backgroundColor: "black",

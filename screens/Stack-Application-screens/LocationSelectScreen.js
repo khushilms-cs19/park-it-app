@@ -3,33 +3,75 @@ import { StyleSheet, Text, View, Button, Image, Dimensions, TextInput, Keyboard 
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import DefaultText from '../../components/DefaultText';
-import CustomBigButton from '../../components/CustomBigButton';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons'; 
-import MainScreenButton from '../../components/MainScreenButton';
+import LocationSearched from '../../components/LocationSearched';
 const LocationSelectScreen = (props) => {
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+    const [locationSearch, setLocationSearch] = useState();
+    const [searchedList, setSearchedList] = useState([]);
+    const locationData = [
+        {
+            name: "mantri square",
+            location: "Malleswaram, Bangalore."
+        },
+        {
+            name: "orion mall.",
+            location: "Rajajinagar, Bangalore."
+        },
+        {
+            name: "church street social",
+            location: "Church Street, Bangalore."
+        },
+        {
+            name: "ulsoor lake",
+            location: "Halasuru, Bangalore."
+        },
+        {
+            name: "truffles",
+            location: "Koromangala, Bangalore."
+        },
+        {
+            name: "lalit ashok",
+            location: "Kumara Krupa Road, Bangalore."
+        },
+    ];
+    const searchForLocations = (event)=>{
+        let list = [];
+        setLocationSearch(event);
+        if(event===""){
+            setSearchedList([]);
+            return;
+        }
+        locationData.forEach((location)=>{
+            if(location.name.includes(event)){
+                list = [...list, location] 
+            }
+        });
+        setSearchedList(list);
+    }
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+                setKeyboardVisible(true); 
+            }
+        );
+        const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+                setKeyboardVisible(false);
+            }
+        );
 
- useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setKeyboardVisible(true); // or some other action
-      }
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setKeyboardVisible(false); // or some other action
-      }
-    );
-
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, []);
+        return () => {
+            keyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+        };
+    }, []);
+    const goToLocationMap = ()=>{
+        props.navigation.navigate("LocationSelectMap");
+        setLocationSearch("");
+        setSearchedList([]);
+    }
     return (
         <View style={styles.screen}>
             {
@@ -47,8 +89,8 @@ const LocationSelectScreen = (props) => {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.profileImageContainer}>
-                        <Image 
-                            source={{uri:"https://memetemplatehouse.com/wp-content/uploads/2020/05/main-toh-sirf-pati-banna-chahta-hun-shyam-hera-pheri.jpg"}}
+                        <Image
+                            source={{ uri: "https://memetemplatehouse.com/wp-content/uploads/2020/05/main-toh-sirf-pati-banna-chahta-hun-shyam-hera-pheri.jpg" }}
                             fadeDuration={1000}
                             style={styles.profileImage}
                             resizeMode="cover"
@@ -62,8 +104,15 @@ const LocationSelectScreen = (props) => {
             </View>
             <View style={styles.searchLocationMain}>
                 <View style={styles.searchLocationContainer}>
-                    <TextInput placeholder={"Enter the destination..."}/>
-                    <Ionicons name="ios-search" size={24} color="#bbb"/>
+                    <TextInput placeholder={"Enter the destination..."} onChangeText={searchForLocations} value={locationSearch}/>
+                    <Ionicons name="ios-search" size={24} color="#bbb" />
+                </View>
+                <View>
+                    {
+                        searchedList.map((location, index)=>{
+                            return <LocationSearched name={location.name} location={location.location} goToLocationMap={goToLocationMap}/>
+                        })
+                    }
                 </View>
             </View>
         </View>
@@ -85,8 +134,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-    }, 
-    profileImageContainer:{
+    },
+    profileImageContainer: {
         width: 150,
         height: 150,
         borderRadius: 75,
@@ -117,7 +166,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         paddingVertical: 10,
         paddingHorizontal: 20,
-        width: Dimensions.get("window").width*0.9,
+        width: Dimensions.get("window").width * 0.9,
         justifyContent: "space-between",
         elevation: 3,
         backgroundColor: "white",
