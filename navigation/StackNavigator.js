@@ -91,6 +91,9 @@ const MainApplicationNavigator = createStackNavigator({
     },
     BookingSuccess: {
         screen: BookingSuccessScreen,
+        navigationOptions: {
+            headerTitle: "Parkit"
+        }
     }
 }, {
     navigationOptions: (navData)=>{

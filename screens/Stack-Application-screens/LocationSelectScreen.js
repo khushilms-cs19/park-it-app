@@ -36,13 +36,14 @@ const LocationSelectScreen = (props) => {
     ];
     const searchForLocations = (event)=>{
         let list = [];
+        let value = event.toLowerCase();
         setLocationSearch(event);
         if(event===""){
             setSearchedList([]);
             return;
         }
         locationData.forEach((location)=>{
-            if(location.name.includes(event)){
+            if(location.name.includes(value)){
                 list = [...list, location] 
             }
         });
@@ -110,7 +111,7 @@ const LocationSelectScreen = (props) => {
                 <View>
                     {
                         searchedList.map((location, index)=>{
-                            return <LocationSearched name={location.name} location={location.location} goToLocationMap={goToLocationMap}/>
+                            return <LocationSearched key={index} name={location.name} location={location.location} goToLocationMap={goToLocationMap}/>
                         })
                     }
                 </View>
