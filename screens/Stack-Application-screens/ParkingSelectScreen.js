@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, Text, View, Button, Dimensions, ScrollView } from 'react-native'
 import RNDateTimeSelector from 'react-native-date-time-scroll-picker'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -11,46 +11,51 @@ const dataSet = {
       thirdColumn: [...Array(60).keys()].map((item, idx)=> {return {value: item, index: idx}}),
     },
     initials: [1,2,5]  
-  }
-const parkingLotData = [
-    {
-        status: "available",
-        name: "a1",
-    },
-    {
-        status: "available",
-        name: "a2",
-    },
-    {
-        status: "available",
-        name: "a3",
-    },
-    {
-        status: "available",
-        name: "a4",
-    },
-    {
-        status: "available",
-        name: "a5",
-    },
-    {
-        status: "available",
-        name: "a6",
-    },
-    {
-        status: "available",
-        name: "a7",
-    },
-    {
-        status: "available",
-        name: "a8",
-    },
-    {
-        status: "available",
-        name: "a9",
-    },
-]
+}
+
 const ParkingSelectScreen = (props) => {
+
+    const [parkingLotData, setParkingLotData] = useState(
+        [
+            {
+                status: "available",
+                name: "a1",
+            },
+            {
+                status: "available",
+                name: "a2",
+            },
+            {
+                status: "available",
+                name: "a3",
+            },
+            {
+                status: "available",
+                name: "a4",
+            },
+            {
+                status: "available",
+                name: "a5",
+            },
+            {
+                status: "available",
+                name: "a6",
+            },
+            {
+                status: "available",
+                name: "a7",
+            },
+            {
+                status: "available",
+                name: "a8",
+            },
+            {
+                status: "available",
+                name: "a9",
+            },
+        ]
+    )
+
     return (
         // <View style={styles.screen}>
         //     <Text>This is the parking select screen.</Text>

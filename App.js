@@ -6,12 +6,13 @@ import * as Font from "expo-font";
 import MainApplication from './navigation/MainNavigator';
 
 
-const fontAbsoluteAddressOpenSansBold = "D:/5th Sem/Project Work/Version 1/parkit/assets/fonts/OpenSans-Bold.ttf";
-const fontAbsoluteAddressOpenSans = "D:/5th Sem/Project Work/Version 1/parkit/assets/fonts/OpenSans-Regular.ttf";
+
+// const fontAbsoluteAddressOpenSansBold = path.resolve(__dirname, './assets/fonts/OpenSans-Bold.ttf');
+// const fontAbsoluteAddressOpenSans = path.resolve(__dirname, './assets/fonts/OpenSans-Regular.ttf');
 const fetchFonts = () => {
     return Font.loadAsync({
-        "open-sans": require(fontAbsoluteAddressOpenSans),
-        "open-sans-bold": require(fontAbsoluteAddressOpenSansBold),
+        "open-sans": require('./assets/fonts/OpenSans-Regular.ttf'),
+        "open-sans-bold": require('./assets/fonts/OpenSans-Bold.ttf'),
     });
 }
 
