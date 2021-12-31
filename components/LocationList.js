@@ -2,7 +2,7 @@ import React from "react";
 import { Dimensions, StyleSheet, FlatList, View } from "react-native";
 import { Rectangle } from "./Rectangle";
 
-export const LocationList = () => {
+export const LocationList = (props) => {
 
     const data = [
         {
@@ -39,29 +39,37 @@ export const LocationList = () => {
 
 
     return (
-        <View>
-            <FlatList
-                style={styles.list}
-                data={data}
-                keyExtractor={(item) => item.location}
-                renderItem={({ item }) => {
-                    return (
-                        <Rectangle title={item.name} />
-                    )
-                }}
-                horizontal
-                snapToInterval={Dimensions.get("window").width-60}
-                onViewableItemsChanged={onViewRef.current}
-                viewabilityConfig={viewConfigRef.current}
-                decelerationRate={'fast'}
-            />
+        <View style={styles.screen}>
+            <View>
+                <FlatList
+                    style={styles.list}
+                    data={data}
+                    keyExtractor={(item) => item.location}
+                    renderItem={({ item }) => {
+                        return (
+                            <Rectangle title={item.name} status={true} goToLocationMap={props.goToLocationMap}/>
+                        )
+                    }}
+                    horizontal
+                    snapToInterval={Dimensions.get("window").width-60}
+                    onViewableItemsChanged={onViewRef.current}
+                    viewabilityConfig={viewConfigRef.current}
+                    decelerationRate={'fast'}
+                />
+            </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    screen: {
+        flex: 1,
+        flexDirection: "column",
+        justifyContent: "flex-end",
+        alignItems: "flex-end",
+    },
     list: {
         height: Dimensions.get("window").height * 0.5,
-        marginTop: Dimensions.get("window").height * 0.48,
+        marginTop: Dimensions.get("window").height * 0.6,
     }
 });

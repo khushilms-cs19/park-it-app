@@ -82,6 +82,9 @@ const MainApplicationNavigator = createStackNavigator({
     },
     LocationSelectMap: {
         screen: LocationSelectMapScreen,
+        navigationOptions: {
+            headerShown: false,
+        }
     },
     ParkingSelect: {
         screen: ParkingSelectScreen,

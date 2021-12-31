@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import { Dimensions, StyleSheet, Text, TextInput, View } from 'react-native'
 
 const CustomTextInput = (props) => {
     return (
@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 10,
         fontFamily: "open-sans-bold",
+        width: "100%",
     },
 
 })

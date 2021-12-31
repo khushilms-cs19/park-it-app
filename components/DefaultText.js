@@ -13,6 +13,6 @@ const styles = StyleSheet.create({
     text: {
         fontFamily: "open-sans-bold",
         fontSize: 20,
-        margin: 20,
+        margin: 15,
     }
 })

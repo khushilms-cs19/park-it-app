@@ -14,6 +14,9 @@ const MainApplicationDrawer = createDrawerNavigator({
     },
     MyProfile: {
         screen: ProfileDetailsScreen,
+        navigationOptions: {
+            headerTitle: "My Profile",
+        }
     },
     ParkingHistory: {
         screen: ParkingHistoryScreen,
@@ -24,6 +27,27 @@ const MainApplicationDrawer = createDrawerNavigator({
     Coupons: {
         screen: CouponsScreen,
     },
+},{
+    drawerWidth: 200,
+    drawerStyle:{
+        margin: 60,
+    },
+    contentOptions:{
+        itemsContainerStyle: {
+            marginVertical:30,
+            marginHorizontal: 10,
+            borderRadius: 10,
+        },
+        iconContainerStyle:{
+            borderRadius: 10,
+        },
+        activeTintColor: "white",
+        activeBackgroundColor: "black",
+    },
+    drawerActiveTintColor: "white",
+    drawerActiveBackgroundColor: "black",
+    navigationOptions:{
+    }
 });
 const MainApplicationStack = createStackNavigator({
     InitialSetup:{

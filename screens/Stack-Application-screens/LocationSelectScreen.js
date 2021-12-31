@@ -4,7 +4,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import DefaultText from '../../components/DefaultText';
 import LocationSearched from '../../components/LocationSearched';
+
 const LocationSelectScreen = (props) => {
+    const [noLocationText, setNoLocationText] = useState("Search of a place...");
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
     const [locationSearch, setLocationSearch] = useState();
     const [searchedList, setSearchedList] = useState([]);
@@ -39,6 +41,7 @@ const LocationSelectScreen = (props) => {
         let value = event.toLowerCase();
         setLocationSearch(event);
         if(event===""){
+            setNoLocationText("Search for a place...");
             setSearchedList([]);
             return;
         }
@@ -47,6 +50,9 @@ const LocationSelectScreen = (props) => {
                 list = [...list, location] 
             }
         });
+        if(list.length===0 && event!=""){
+            setNoLocationText("Destination not found...");
+        }
         setSearchedList(list);
     }
     useEffect(() => {
@@ -110,9 +116,13 @@ const LocationSelectScreen = (props) => {
                 </View>
                 <View>
                     {
+                        searchedList.length>0 ?
                         searchedList.map((location, index)=>{
                             return <LocationSearched key={index} name={location.name} location={location.location} goToLocationMap={goToLocationMap}/>
-                        })
+                        }):
+                        <Text style={styles.noLocationFound}>
+                            {noLocationText}
+                        </Text>
                     }
                 </View>
             </View>
@@ -177,5 +187,10 @@ const styles = StyleSheet.create({
         width: "100%",
         justifyContent: "center",
         alignItems: "center",
+    },
+    noLocationFound: {
+        marginVertical: 10,
+        paddingVertical: 10,
+        fontFamily: "open-sans",
     }
 })
