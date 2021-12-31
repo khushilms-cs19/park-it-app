@@ -3,7 +3,7 @@ import { Dimensions, StyleSheet, Text, TextInput, View } from 'react-native'
 
 const CustomTextInput = (props) => {
     return (
-        <TextInput placeholder={props.placeholder}  style={styles.textInput}/>
+        <TextInput placeholder={props.placeholder}  style={styles.textInput} secureTextEntry={props.passwordTrue || false}/>
     )
 }
 

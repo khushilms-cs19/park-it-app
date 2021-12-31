@@ -47,8 +47,8 @@ const ProfileDetailsScreen = (props) => {
                     <View style={styles.modalContainer}>
                         <Text style={styles.modalTitle}>Change Password</Text>
                         <View>
-                            <CustomTextInput placeholder='New password'/>
-                            <CustomTextInput placeholder='Confirm new password'/>
+                            <CustomTextInput placeholder='New password' passwordTrue={true}/>
+                            <CustomTextInput placeholder='Confirm new password' passwordTrue={true}/>
                             <View style={styles.buttonContainer}>
                                 <TouchableOpacity style={styles.modalButton} onPress={changeUserPassword}>
                                     <Text style={styles.buttonText}>Confirm</Text>
