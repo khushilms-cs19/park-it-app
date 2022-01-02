@@ -1,27 +1,65 @@
-import React from 'react'
-import { StyleSheet, Text, View, Button, Image, Dimensions } from 'react-native'
+import React, { useState } from 'react'
+import { StyleSheet, Text, View, Button, Image, Dimensions, Modal, TouchableOpacity } from 'react-native'
 import { Ionicons } from "@expo/vector-icons";
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import DefaultText from '../../components/DefaultText';
 import CustomBigButton from '../../components/CustomBigButton';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
 import MainScreenButton from '../../components/MainScreenButton';
+import MenuButton from '../../components/MenuButton';
+
 const MainScreen = (props) => {
+    const [modalVisible, setModalVisible] = useState(false);
+    const logout = ()=>{
+        props.navigation.navigate("Welcome");
+        setModalVisible(false);
+        console.log("User has logged out..");
+    }
     return (
         <View style={styles.screen}>
             {/* <Text>This is the main landing screen.</Text>
             <Button title="book parking space" onPress={() => props.navigation.navigate("LocationSelect")} /> */}
+            
+            {
+                modalVisible &&
+                <TouchableOpacity style={styles.modalOverlay}></TouchableOpacity>
+            }
+            <Modal
+                animationType='slide'
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={()=>{
+                    console.log("main screen modal closed...")
+                    setModalVisible(false);
+                }}
+            >
+                <View style={styles.modalMain}>
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalTop}>
+                            <Text style={styles.modalTitle}>Are you sure you want to logout?</Text>
+                        </View>
+                        <View style={styles.modalBottom}>
+                            <TouchableOpacity style={styles.modalButton} onPress={()=>logout()}>
+                                <Text style={styles.modalButtonText}>Confirm</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.modalButton} onPress={()=>setModalVisible(false)}>
+                                <Text style={styles.modalButtonText}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
             <View style={styles.topContainer}>
                 <View style={styles.topNavigation}>
                     <TouchableOpacity >
                         <DefaultText fontSize={14} color="white">Settings</DefaultText>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={()=>props.navigation.navigate("MyProfile")}>
                         <DefaultText fontSize={28} color="white">Profile</DefaultText>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={()=>setModalVisible(true)}>
                         <DefaultText fontSize={14} color="white">Logout</DefaultText>
                     </TouchableOpacity>
                 </View>
@@ -33,6 +71,9 @@ const MainScreen = (props) => {
                         resizeMode="cover"
                     />
                 </View>
+            </View>
+            <View>
+                <MenuButton {...props}/>
             </View>
             <View style={styles.nameContainer}>
                 <Text style={styles.nameMain}>Ghanshyam</Text>
@@ -110,5 +151,51 @@ const styles = StyleSheet.create({
         color: "white",
         fontFamily: "open-sans",
         fontSize: 18,
+    },
+    modalOverlay:{
+        position: 'absolute',
+        width: Dimensions.get("window").width,
+        height: Dimensions.get("window").height,
+        backgroundColor: "black",
+        opacity: 0.7,
+        zIndex: 10,
+    },
+    modalMain:{
+        flex: 1,
+        justifyContent: "center",
+    },
+    modalContainer: {
+        backgroundColor: "white",
+        elevation: 20,
+        alignSelf: "center",
+        alignItems: "center",
+        padding: 20,
+        borderRadius: 20,
+        width: Dimensions.get("window").width*0.9,
+    },
+    modalTop:{
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
+    modalTitle: {
+        fontFamily: "open-sans-bold",
+        fontSize: 16,
+    },
+    modalBottom: {
+        flexDirection: "row",
+        width: "100%",
+        justifyContent: "space-around",
+        marginVertical: 20,
+    },
+    modalButton: {
+        backgroundColor: "black",
+        padding: 10,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+    },
+    modalButtonText:{
+        fontFamily: "open-sans-bold",
+        color: "white",
+        fontSize: 15,
     }
 })

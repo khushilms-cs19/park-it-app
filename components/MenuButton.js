@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         alignSelf: "flex-start",
         marginHorizontal: 20,
-        marginVertical: 30,
+        marginVertical: 40,
+        zIndex: 99,
     }
 })

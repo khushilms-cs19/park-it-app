@@ -88,9 +88,15 @@ const MainApplicationNavigator = createStackNavigator({
     },
     ParkingSelect: {
         screen: ParkingSelectScreen,
+        navigationOptions: {
+            headerTitle: "Select Parking Spot"
+        }
     },
     ServiceSelect: {
         screen: ServiceSelectScreen,
+        navigationOptions: {
+            headerTitle: "Select Services"
+        }
     },
     BookingSuccess: {
         screen: BookingSuccessScreen,

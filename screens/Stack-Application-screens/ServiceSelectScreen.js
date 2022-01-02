@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, Text, View, Button, TouchableOpacity, Dimensions, ScrollView } from 'react-native'
 import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -7,11 +7,28 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
 const ServiceSelectScreen = (props) => {
+    const [carServicesSelected, setCarServicesSelected] = useState(false);
+    const [oilChangeSelected, setOilChangeSelected] = useState(false);
+    const [cleaningSelected, setCleaningSelected] = useState(false);
+    const normalStyle = {...styles.serviceContainer};
+    const selectedStyle = {...styles.serviceContainer,...styles.serviceSelectedContainer};
+    let additionalChanges = 0;
+    if(carServicesSelected){
+        additionalChanges+=20;
+    }
+    if(oilChangeSelected){
+        additionalChanges+=10;
+    }
+    if(cleaningSelected){
+        additionalChanges+=5;
+    }
+    let totalBillAmount = additionalChanges+10.50+5;
     return (
         // <View style={styles.screen}>
         //     <Text>This is the service select screen.</Text>
         //     <Button title="Confirm" onPress={()=>props.navigation.navigate("BookingSuccess")}/>
         // </View>
+        
         <View style={styles.screen}>
             <ScrollView>
                 <View style={styles.bookingDetails}>
@@ -33,17 +50,38 @@ const ServiceSelectScreen = (props) => {
                         <AntDesign name="downcircleo" size={24} color="white" />
                     </View>
                     <View style={styles.servicesList}>
-                        <TouchableOpacity style={styles.serviceContainer}>
+                        <TouchableOpacity 
+                            style={carServicesSelected?selectedStyle:normalStyle}
+                            onPress={()=>setCarServicesSelected(!carServicesSelected)}
+                        >
                             <Text style={styles.serviceName}>Full Car Service</Text>
-                            <FontAwesome name="gears" size={24} color="black" />
+                            {
+                                carServicesSelected ?
+                                <FontAwesome name="check-circle" size={24} color="black" />:
+                                <FontAwesome name="gears" size={24} color="black" />
+                            }
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.serviceContainer}>
+                        <TouchableOpacity 
+                            style={oilChangeSelected?selectedStyle:normalStyle}
+                            onPress={()=>setOilChangeSelected(!oilChangeSelected)}
+                        >
                             <Text style={styles.serviceName}>Oil Change</Text>
-                            <FontAwesome5 name="oil-can" size={24} color="black" />
+                            {
+                                oilChangeSelected?
+                                <FontAwesome name="check-circle" size={24} color="black" />:
+                                <FontAwesome5 name="oil-can" size={24} color="black" />
+                            }
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.serviceContainer}>
+                        <TouchableOpacity 
+                            style={cleaningSelected?selectedStyle:normalStyle}
+                            onPress={()=>setCleaningSelected(!cleaningSelected)}
+                        >
                             <Text style={styles.serviceName}>Cleaning</Text>
-                            <MaterialIcons name="cleaning-services" size={24} color="black" />
+                            {
+                                cleaningSelected?
+                                <FontAwesome name="check-circle" size={24} color="black" />:
+                                <MaterialIcons name="cleaning-services" size={24} color="black" />
+                            }
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -58,14 +96,14 @@ const ServiceSelectScreen = (props) => {
                         </View>
                         <View style={styles.billEntry}>
                             <Text style={styles.billEntryText}>Additional Services</Text>
-                            <Text style={styles.billEntryText}>0.00</Text>
+                            <Text style={styles.billEntryText}>{additionalChanges}.00</Text>
                         </View>
                         <View style={styles.billEntry}>
                             <Text style={styles.billEntryText}>Booking Charges</Text>
                             <Text style={styles.billEntryText}>5.00</Text>
                         </View>
                     </View>
-                    <Text style={styles.totalBillText}>Total: 15.50</Text>
+                    <Text style={styles.totalBillText}>Total: {totalBillAmount.toFixed(2)}</Text>
                 </View>
             </ScrollView>
             <View style={styles.buttonContainer}>
@@ -175,6 +213,10 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
+    },
+    serviceSelectedContainer:{
+        borderWidth: 4,
+        borderColor: "black",
     },
     serviceName: {
         fontFamily: "open-sans-bold",

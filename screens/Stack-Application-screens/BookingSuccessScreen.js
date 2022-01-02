@@ -1,8 +1,23 @@
-import React from 'react'
-import { StyleSheet, Text, View, Button, TouchableOpacity, Dimensions } from 'react-native'
+import React, { useEffect, useRef } from 'react'
+import { StyleSheet, Text, View, Button, TouchableOpacity, Dimensions, Animated } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'; 
 import { Entypo } from '@expo/vector-icons'; 
 const BookingSuccessScreen = (props) => {
+    const springValue = useRef(new Animated.Value(0.3)).current;
+    const springAnimation = ()=>{
+        Animated.spring(
+            springValue,
+            {
+                toValue: 1,
+                friction: 1,
+                useNativeDriver: true,
+                duration: 500,
+            }
+        ).start();
+    }
+    useEffect(()=>{
+        springAnimation();
+    },[]);
     return (
         // <View style={styles.screen}>
         //     <Text>This is the booking success screen.</Text>
@@ -10,7 +25,11 @@ const BookingSuccessScreen = (props) => {
         // </View>
         <View style={styles.screen}>
             <View style={styles.centerBox}>
-                <FontAwesome name="check-circle" size={150} color="black" />
+                <Animated.View style={{transform: [{
+                    scale: springValue
+                }]}}>
+                    <FontAwesome name="check-circle" size={150} color="black" />
+                </Animated.View>
                 <Text style={styles.successText}>Success!</Text>
                 <TouchableOpacity style={styles.homeButtonContainer} onPress={()=>props.navigation.popToTop()}>
                     <Text style={styles.homeText}>Home</Text>

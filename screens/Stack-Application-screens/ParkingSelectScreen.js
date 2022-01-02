@@ -134,6 +134,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "space-between",
+        marginTop: 30,
     },  
     timeSelectContainer: {
         backgroundColor: "white",

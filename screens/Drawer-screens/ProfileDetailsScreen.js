@@ -82,15 +82,15 @@ const ProfileDetailsScreen = (props) => {
             <View style={styles.userDataFields}>
                 <View style={styles.inputContainer}>
                     <Text style={styles.inputLabel}>First Name</Text>
-                    <CustomTextInput placeholder={"Enter your First name.."}/>
+                    <CustomTextInput placeholder={"Enter your First name.."} defaultValue={"Ghanshyam"}/>
                 </View>
                 <View style={styles.inputContainer}>
                     <Text style={styles.inputLabel}>Last Name</Text>
-                    <CustomTextInput placeholder={"Enter your last name.."}/>
+                    <CustomTextInput placeholder={"Enter your last name.."} defaultValue={"Pati"}/>
                 </View>
                 <View style={styles.inputContainer}>
                     <Text style={styles.inputLabel}>Email id</Text>
-                    <CustomTextInput placeholder={"Enter your email id.."}/>
+                    <CustomTextInput placeholder={"Enter your email id.."} defaultValue={"ghanshyampati@gmail.com"}/>
                 </View>
                 <TouchableOpacity style={styles.changePassword} onPress={()=>setModalVisible(true)}>
                     <Text style={styles.changePasswordText}>Change Password</Text>
@@ -149,6 +149,7 @@ const styles = StyleSheet.create({
     inputLabel:{
         fontFamily: "open-sans-bold",
         marginHorizontal: 10,
+        color: "#555",
     },
     inputField: {
         backgroundColor: "white",

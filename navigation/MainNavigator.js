@@ -15,31 +15,45 @@ const MainApplicationDrawer = createDrawerNavigator({
     MyProfile: {
         screen: ProfileDetailsScreen,
         navigationOptions: {
-            headerTitle: "My Profile",
+            title: "My Profile",
         }
     },
     ParkingHistory: {
         screen: ParkingHistoryScreen,
+        navigationOptions: {
+            title: "Parking History",
+        }
     },
     CustomerSupport: {
         screen: CustomerSupportScreen,
+        navigationOptions: {
+            title: "Customer Support",
+        }
     },
     Coupons: {
         screen: CouponsScreen,
+        navigationOptions: {
+            title: "Log Out",
+        }
     },
 },{
-    drawerWidth: 200,
+    drawerWidth: 250,
     drawerStyle:{
-        margin: 60,
+        margin: 70,
     },
     contentOptions:{
+        itemStyle:{
+            borderRadius: 10,
+            marginVertical: 10,
+        },
         itemsContainerStyle: {
-            marginVertical:30,
+            marginVertical:40,
             marginHorizontal: 10,
             borderRadius: 10,
         },
         iconContainerStyle:{
             borderRadius: 10,
+            marginVertical: 10,
         },
         activeTintColor: "white",
         activeBackgroundColor: "black",
