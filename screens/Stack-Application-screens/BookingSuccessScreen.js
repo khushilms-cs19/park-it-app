@@ -1,9 +1,12 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { StyleSheet, Text, View, Button, TouchableOpacity, Dimensions, Animated } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'; 
 import { Entypo } from '@expo/vector-icons'; 
+import { Audio } from "expo-av";
 const BookingSuccessScreen = (props) => {
     const springValue = useRef(new Animated.Value(0.3)).current;
+    const [sound, setSound] = useState();
+    const successAudio = require("../../sounds/success.mp3");
     const springAnimation = ()=>{
         Animated.spring(
             springValue,
@@ -17,6 +20,22 @@ const BookingSuccessScreen = (props) => {
     }
     useEffect(()=>{
         springAnimation();
+    },[]);
+    const playSuccessSound = async ()=>{
+        console.log("loading the sound");
+        const {sound} = await Audio.Sound.createAsync(successAudio);
+        setSound(sound);
+        await sound.playAsync();
+    }
+
+
+    useEffect(()=>{
+        playSuccessSound();
+        return sound ?
+        ()=>{
+            console.log("Unloading the sound");
+            sound.unloadAsync();
+        }: undefined;
     },[]);
     return (
         // <View style={styles.screen}>
