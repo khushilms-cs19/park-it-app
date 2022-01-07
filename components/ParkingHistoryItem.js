@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 import { Dimensions, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'; 
 const ParkingHistoryItem = (props) => {
-    const {name, location, spotNumber, startTime, endTime} = props.data;
+    const {time,services,parkingLocation,amount,status} = props.data;
     const {setModalVisibleOverlay } = props;
     const [modalVisible, setModalVisible] = useState(false);
+    const name="khushil";
     return (
         <View>
 
@@ -26,11 +27,11 @@ const ParkingHistoryItem = (props) => {
                         <Text style={styles.locationArea}>{location}</Text>
                         <View style={styles.timeContainer}>
                             <Text style={styles.startTimeModal}>Start Time:</Text>
-                            <Text style={styles.startTimeModal}>{startTime}</Text>
+                            <Text style={styles.startTimeModal}>{time[0].start}</Text>
                         </View>
                         <View style={styles.timeContainer}>
                             <Text style={styles.startTimeModal}>End Time:</Text>
-                            <Text style={styles.startTimeModal}>{endTime}</Text>
+                            <Text style={styles.startTimeModal}>{time[0].start}</Text>
                         </View>
                         <Text style={styles.spotNumber}>{spotNumber}</Text>
                     </View>

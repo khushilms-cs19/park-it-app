@@ -1,9 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, StyleSheet, Text, View,TouchableOpacity } from 'react-native';
 import {Ionicons} from "@expo/vector-icons"
+import { StackActions, NavigationActions } from 'react-navigation'
 import DefaultText from '../../components/DefaultText';
 import ShadowBox from '../../components/ShadowBox';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const WelcomeScreen = (props) => {
+    useEffect(async()=>{
+        await AsyncStorage.getItem("token").then((resp)=>{
+            if(resp){
+                const navigateAction = StackActions.reset({
+                    index: 0,
+                    actions: [NavigationActions.navigate({routeName: "Main"})],        
+                });
+                props.navigation.dispatch(navigateAction);
+                console.log("resp: ",resp);
+                props.navigation.navigate("MainScreen");
+            }
+        })
+    },[]);
     return (
         <View style={styles.screen}>
             <ShadowBox>

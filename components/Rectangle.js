@@ -2,6 +2,9 @@ import React from "react";
 import { Dimensions, StyleSheet, View, Text, Button } from "react-native"
 import CustomBigButton from "./CustomBigButton";
 import {AntDesign} from "@expo/vector-icons";
+import updateBookingDetails from "../redux/actions/bookingDetailsActions";
+import { bookingDetailsConstants } from "../redux/actionTypes/bookingDetailsConstants";
+
 export const Rectangle = (props) => {
 
     if (props.title == "filler") {
@@ -33,7 +36,10 @@ export const Rectangle = (props) => {
                     <AntDesign name="checkcircle" size={15} color="black" />
                 </View>
             </View>
-            <CustomBigButton onPress={props.goToLocationMap}>
+            <CustomBigButton onPress={()=>{
+                    updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_LOCATION, props.title);
+                    props.navigation.navigate("ParkingSelect");
+                }}>
                 Select
             </CustomBigButton>
         </View>

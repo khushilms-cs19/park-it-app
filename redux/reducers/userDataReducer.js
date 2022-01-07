@@ -1,31 +1,42 @@
 import { userDataConstants } from "../actionTypes/userDataConstants";
 
 const initialState = {
-    id: "",
-    firstName: "",
-    lastName: "",
+    _id: "",
+    name:"",
     email: "",
-    phno: "",
+    phone: "",
     token: "",
+    balance: 0,
+    history: [],
 }
 
 const userDataReducer = (state = initialState, action)=>{
     console.log(action.type, action.payload);
     switch(action.type){
-        case userDataConstants.USER_DATA_UPDATE_FIRST_NAME:
+        case userDataConstants.USER_DATA_UPDATE_COMPLETE: 
             return {
                 ...state,
-                firstName: action.payload,
+                ...action.payload,
             }
-        case userDataConstants.USER_DATA_UPDATE_LAST_NAME:
+        case userDataConstants.USER_DATA_UPDATE_NAME:
             return {
                 ...state,
-                lastName: action.payload,
+                name: action.payload,
             }
         case userDataConstants.USER_DATA_UPDATE_EMAIL:
             return {
                 ...state,
                 email: action.payload,
+            }
+        case userDataConstants.USER_DATA_UPDATE_TOKEN:
+            return {
+                ...state,
+                token: action.payload,
+            }
+        case userDataConstants.USER_DATA_UPDATE_HISTORY: 
+            return {
+                ...state,
+                history: action.payload,
             }
         default: return state;
     }

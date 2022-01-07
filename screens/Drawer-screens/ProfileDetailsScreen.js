@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View, Keyboard, ScrollView, Modal, Button} from 'react-native'
 import { TextInput } from 'react-native-gesture-handler';
+import { useSelector } from 'react-redux';
 import CustomBigButton from '../../components/CustomBigButton';
 import CustomTextInput from '../../components/CustomTextInput';
 import DefaultText from '../../components/DefaultText';
@@ -11,19 +12,14 @@ import { store } from '../../redux/store';
 
 const ProfileDetailsScreen = (props) => {
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
+    const userData = useSelector((state)=>state.userData);
     const changeUserPassword = ()=>{
         console.log("The user password changed")
         setModalVisible(false);
     }
     const changeInFirstName = (value)=>{
         console.log(value);
-        updateUserData(userDataConstants.USER_DATA_UPDATE_FIRST_NAME, value);
-        console.log(store.getState());
-    }
-    const changeInLastName = (value)=>{
-        console.log(value);
-        updateUserData(userDataConstants.USER_DATA_UPDATE_LAST_NAME, value);
+        updateUserData(userDataConstants.USER_DATA_UPDATE_NAME, value);
         console.log(store.getState());
     }
     const changeInEmail = (value)=>{
@@ -103,15 +99,11 @@ const ProfileDetailsScreen = (props) => {
             <View style={styles.userDataFields}>
                 <View style={styles.inputContainer}>
                     <Text style={styles.inputLabel}>First Name</Text>
-                    <CustomTextInput placeholder={"Enter your First name.."} defaultValue={"Ghanshyam"} onChangeHandler={changeInFirstName}/>
-                </View>
-                <View style={styles.inputContainer}>
-                    <Text style={styles.inputLabel}>Last Name</Text>
-                    <CustomTextInput placeholder={"Enter your last name.."} defaultValue={"Pati"} onChangeHandler={changeInLastName}/>
+                    <CustomTextInput placeholder={"Enter your First name.."} defaultValue={ userData!=={} && userData.name[0].toUpperCase()+userData.name.slice(1) || "User"} onChangeHandler={changeInFirstName}/>
                 </View>
                 <View style={styles.inputContainer}>
                     <Text style={styles.inputLabel}>Email id</Text>
-                    <CustomTextInput placeholder={"Enter your email id.."} defaultValue={"ghanshyampati@gmail.com"} onChangeHandler={changeInEmail}/>
+                    <CustomTextInput placeholder={"Enter your email id.."} defaultValue={userData.email} onChangeHandler={changeInEmail}/>
                 </View>
                 <TouchableOpacity style={styles.changePassword} onPress={()=>setModalVisible(true)}>
                     <Text style={styles.changePasswordText}>Change Password</Text>

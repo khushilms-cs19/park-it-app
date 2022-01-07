@@ -5,7 +5,9 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 const LocationSearched = (props) => {
     const {name, location} = props;
     return (
-        <TouchableOpacity onPress={()=>props.goToLocationMap()}>    
+        <TouchableOpacity onPress={()=>{
+                props.goToLocationMap();
+            }}>    
             <View style={styles.locationContainer}>
                 <Text style={styles.locationName}>{name[0].toUpperCase()+name.slice(1)}</Text>
                 <Text style={styles.locationMap}>{location}</Text>

@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { StyleSheet, Text, View, Button, Keyboard, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, Button, Keyboard, Dimensions, Alert, AsyncStorageStatic } from 'react-native'
 import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { StackActions, NavigationActions } from 'react-navigation';
 import {Ionicons} from "@expo/vector-icons";
@@ -22,7 +22,7 @@ const SignupScreen = (props) => {
         setPassword(value);
     }
     const signup = async()=>{
-        await axios.post(`${baseUrl}/signup`,{
+        await axios.post(`${baseUrl}signup/`,{
             name: userName,
             email: email,
             password: password,
@@ -55,13 +55,23 @@ const SignupScreen = (props) => {
                         <CustomTextInput placeholder={"Email"} onChangeHandler={changeEmail}/>
                         <CustomTextInput placeholder={"Password"} onChangeHandler={changePassword} passwordTrue={true}/>
                     </View>
-                    <CustomBigButton onPress={() =>{
-                        const navigateAction = StackActions.reset({
-                            index: 0,
-                            actions: [NavigationActions.navigate({routeName: "Main"})],        
-                        });
-                        props.navigation.dispatch(navigateAction);
-                    }} navigation={props.navigation} onPress ={signup}>
+                    <CustomBigButton onPress={async() =>{
+                        try{
+                            await signup();
+                            const navigateAction = StackActions.reset({
+                                index: 0,
+                                actions: [NavigationActions.navigate({routeName: "Main"})],        
+                            });
+                            props.navigation.dispatch(navigateAction);
+                        }catch{
+                            Alert.alert("Signup Error","There was an error in sign up, try again later",[
+                                {
+                                    text: "Try Again",
+                                    onPress: ()=> console.log("try again clicked"),
+                                }
+                            ])
+                        }
+                    }} navigation={props.navigation}>
                         <Text>
                             Sign Up
                         </Text>

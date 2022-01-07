@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import { FlatList, StyleSheet, Text, TouchableOpacity, View, Dimensions } from 'react-native'
+import { useSelector } from 'react-redux';
 import MenuButton from '../../components/MenuButton';
 import ParkingHistoryItem from '../../components/ParkingHistoryItem';
 
@@ -46,6 +47,8 @@ const ParkingHistoryScreen = (props) => {
             endTime: "7:45",
         },
     ]
+    const parkingHistoryData = useSelector((state)=>state.history);
+    console.log(parkingHistoryData);
     const [modalVisibleOverlay, setModalVisibleOverlay] = useState(false);
     return (
         <View  style={styles.screen}>
@@ -59,7 +62,7 @@ const ParkingHistoryScreen = (props) => {
             </Text>
             <View>
                 <FlatList
-                    data={data}
+                    data={parkingHistoryData}
                     renderItem={(item)=>{
                         return <ParkingHistoryItem data={item.item} setModalVisibleOverlay={setModalVisibleOverlay}/>
                     }}

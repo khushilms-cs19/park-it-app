@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { StyleSheet, Text, View, Button, Image, Dimensions, Modal, TouchableOpacity } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { StyleSheet, Text, View, Button, Image, Dimensions, Modal, TouchableOpacity} from 'react-native'
 import { Ionicons } from "@expo/vector-icons";
 import DefaultText from '../../components/DefaultText';
 import CustomBigButton from '../../components/CustomBigButton';
@@ -8,14 +8,44 @@ import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
 import MainScreenButton from '../../components/MainScreenButton';
 import MenuButton from '../../components/MenuButton';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from 'axios';
+import updateUserData from '../../redux/actions/userDataActions';
+import { userDataConstants } from '../../redux/actionTypes/userDataConstants';
+import { useSelector } from 'react-redux';
+import AppLoading from 'expo-app-loading';
 
 const MainScreen = (props) => {
     const [modalVisible, setModalVisible] = useState(false);
-    const logout = ()=>{
+    const baseUrl = "https://park-it-proj.herokuapp.com/";
+    const userData = useSelector((state)=>state.userData);
+    const fetchData = async()=>{
+        const token = await AsyncStorage.getItem("token");
+        await axios.post(`${baseUrl}user/profile`,{},{
+            headers: {
+                Authorization: "Bearer "+token,
+            }
+        }).then((resp)=>{
+            updateUserData(userDataConstants.USER_DATA_UPDATE_COMPLETE,resp.data);
+        }).catch((err)=>{
+            console.log("there some error with the data: ",err);
+        });
+    }
+    useEffect(async()=>{
+        
+    },[])
+
+    const logout = async()=>{
+        await AsyncStorage.clear();
         props.navigation.navigate("Welcome");
         setModalVisible(false);
         console.log("User has logged out..");
     }
+    const [dataLoaded, setDataLoaded] = useState(false);
+    if(!dataLoaded){
+        return <AppLoading startAsync={fetchData} onFinish={()=>setDataLoaded(true)} onError={(err)=>console.log(err)}/>
+    }
+    // if(userData!===)
     return (
         <View style={styles.screen}>
             {/* <Text>This is the main landing screen.</Text>
@@ -76,8 +106,8 @@ const MainScreen = (props) => {
                 <MenuButton {...props}/>
             </View>
             <View style={styles.nameContainer}>
-                <Text style={styles.nameMain}>Ghanshyam</Text>
-                <Text style={styles.nameMantra}>Aapka naam bhi Anuradha hai</Text>
+                <Text style={styles.nameMain}>{userData!=={} && userData.name[0].toUpperCase()+userData.name.slice(1) || "User"}</Text>
+                <Text style={styles.nameMantra}>{"Book a parking spot now..."}</Text>
             </View>
             <View style={styles.buttonsContainer}>
                 <MainScreenButton width={Dimensions.get("window").width*0.8}
