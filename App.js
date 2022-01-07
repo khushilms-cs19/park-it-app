@@ -4,6 +4,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import AppLoading from 'expo-app-loading';
 import * as Font from "expo-font";
 import MainApplication from './navigation/MainNavigator';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
 
 
 
@@ -22,7 +24,11 @@ export default function App() {
     if (!fontsLoaded) {
         return <AppLoading startAsync={fetchFonts} onFinish={() => setFontsLoaded(true)} onError={(Err) => console.log(Err)} />
     }
-    return <MainApplication/>
+    return (
+        <Provider store={store}>
+            <MainApplication />
+        </Provider>
+    )
     // return (
     //     <View style={styles.container}>
     //         <Text>Open up App.js to start working on your app!</Text>

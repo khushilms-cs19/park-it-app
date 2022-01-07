@@ -5,13 +5,33 @@ import CustomBigButton from '../../components/CustomBigButton';
 import CustomTextInput from '../../components/CustomTextInput';
 import DefaultText from '../../components/DefaultText';
 import MenuButton from '../../components/MenuButton';
+import updateUserData from '../../redux/actions/userDataActions';
+import { userDataConstants } from '../../redux/actionTypes/userDataConstants';
+import { store } from '../../redux/store';
 
 const ProfileDetailsScreen = (props) => {
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
     const changeUserPassword = ()=>{
         console.log("The user password changed")
         setModalVisible(false);
     }
+    const changeInFirstName = (value)=>{
+        console.log(value);
+        updateUserData(userDataConstants.USER_DATA_UPDATE_FIRST_NAME, value);
+        console.log(store.getState());
+    }
+    const changeInLastName = (value)=>{
+        console.log(value);
+        updateUserData(userDataConstants.USER_DATA_UPDATE_LAST_NAME, value);
+        console.log(store.getState());
+    }
+    const changeInEmail = (value)=>{
+        console.log(value);
+        updateUserData(userDataConstants.USER_DATA_UPDATE_EMAIL, value);
+        console.log(store.getState());
+    }
+
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
@@ -32,6 +52,7 @@ const ProfileDetailsScreen = (props) => {
         };
     }, []);
     const [modalVisible, setModalVisible] = useState(false);
+    
     return (
         <ScrollView contentContainerStyle={styles.screen}>
             {
@@ -82,15 +103,15 @@ const ProfileDetailsScreen = (props) => {
             <View style={styles.userDataFields}>
                 <View style={styles.inputContainer}>
                     <Text style={styles.inputLabel}>First Name</Text>
-                    <CustomTextInput placeholder={"Enter your First name.."} defaultValue={"Ghanshyam"}/>
+                    <CustomTextInput placeholder={"Enter your First name.."} defaultValue={"Ghanshyam"} onChangeHandler={changeInFirstName}/>
                 </View>
                 <View style={styles.inputContainer}>
                     <Text style={styles.inputLabel}>Last Name</Text>
-                    <CustomTextInput placeholder={"Enter your last name.."} defaultValue={"Pati"}/>
+                    <CustomTextInput placeholder={"Enter your last name.."} defaultValue={"Pati"} onChangeHandler={changeInLastName}/>
                 </View>
                 <View style={styles.inputContainer}>
                     <Text style={styles.inputLabel}>Email id</Text>
-                    <CustomTextInput placeholder={"Enter your email id.."} defaultValue={"ghanshyampati@gmail.com"}/>
+                    <CustomTextInput placeholder={"Enter your email id.."} defaultValue={"ghanshyampati@gmail.com"} onChangeHandler={changeInEmail}/>
                 </View>
                 <TouchableOpacity style={styles.changePassword} onPress={()=>setModalVisible(true)}>
                     <Text style={styles.changePasswordText}>Change Password</Text>

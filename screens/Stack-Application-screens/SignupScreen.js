@@ -1,12 +1,39 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { StyleSheet, Text, View, Button, Keyboard, Dimensions } from 'react-native'
 import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { StackActions, NavigationActions } from 'react-navigation';
 import {Ionicons} from "@expo/vector-icons";
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomBigButton from '../../components/CustomBigButton';
+import axios from 'axios';
 
 const SignupScreen = (props) => {
+    const baseUrl = "https://park-it-proj.herokuapp.com/";
+    const [userName, setUserName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const changeUserName = (value)=>{
+        setUserName(value);
+    } 
+    const changeEmail = (value)=>{
+        setEmail(value);
+    }
+    const changePassword = (value)=>{
+        setPassword(value);
+    }
+    const signup = async()=>{
+        await axios.post(`${baseUrl}/signup`,{
+            name: userName,
+            email: email,
+            password: password,
+            phone: "9036206110"
+        }).then((resp)=>{
+            console.log(resp);
+        }).catch((err)=>{
+            console.log("There some error : ", err);
+        });
+    }
+    console.log(userName, email, password);
     return (
         <View style={styles.screen}>
             <View style={styles.headerContainer}>
@@ -24,9 +51,9 @@ const SignupScreen = (props) => {
                     }}/> */}
 
                     <View style={styles.inputContainer}>
-                        <CustomTextInput placeholder={"Name"}/>
-                        <CustomTextInput placeholder={"Email"}/>
-                        <CustomTextInput placeholder={"Password"}/>
+                        <CustomTextInput placeholder={"Name"} onChangeHandler = {changeUserName}/>
+                        <CustomTextInput placeholder={"Email"} onChangeHandler={changeEmail}/>
+                        <CustomTextInput placeholder={"Password"} onChangeHandler={changePassword} passwordTrue={true}/>
                     </View>
                     <CustomBigButton onPress={() =>{
                         const navigateAction = StackActions.reset({
@@ -34,7 +61,7 @@ const SignupScreen = (props) => {
                             actions: [NavigationActions.navigate({routeName: "Main"})],        
                         });
                         props.navigation.dispatch(navigateAction);
-                    }} navigation={props.navigation}>
+                    }} navigation={props.navigation} onPress ={signup}>
                         <Text>
                             Sign Up
                         </Text>

@@ -21,7 +21,6 @@ const ParkingHistoryItem = (props) => {
                                 setModalVisible(false)
                                 setModalVisibleOverlay(false)
                             }
-
                             }/>
                         </View>
                         <Text style={styles.locationArea}>{location}</Text>

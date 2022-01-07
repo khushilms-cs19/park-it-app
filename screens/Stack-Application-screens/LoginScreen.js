@@ -1,9 +1,18 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { StyleSheet, Text, View, Button, Keyboard, TouchableOpacity, TouchableWithoutFeedback, Dimensions } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation'
 import CustomBigButton from '../../components/CustomBigButton'
 import CustomTextInput from '../../components/CustomTextInput'
 const LoginScreen = (props) => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const emailChange = (value)=>{
+        setEmail(value);
+    }   
+    const passwordChange = (value)=>{
+        setPassword(value);
+    }
+    console.log(email, password);
     return (
         <View style={styles.screen}>
             {/* <Text>This is the login screen.</Text>
@@ -22,8 +31,8 @@ const LoginScreen = (props) => {
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()} style={{ flex: 1 }}>
                 <View style={{}}>
                     <View style={styles.inputContainer}>
-                        <CustomTextInput placeholder={"Email"} />
-                        <CustomTextInput placeholder={"Password"} />
+                        <CustomTextInput placeholder={"Email"} onChangeHandler={emailChange}/>
+                        <CustomTextInput placeholder={"Password"} onChangeHandler={passwordChange} passwordTrue={true}/>
                     </View>
                     <CustomBigButton onPress={() =>{
                         const navigateAction = StackActions.reset({
