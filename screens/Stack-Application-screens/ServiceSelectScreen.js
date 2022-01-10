@@ -6,23 +6,47 @@ import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
+import updateBookingDetails from '../../redux/actions/bookingDetailsActions';
+import { bookingDetailsConstants } from '../../redux/actionTypes/bookingDetailsConstants';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 const ServiceSelectScreen = (props) => {
     const [carServicesSelected, setCarServicesSelected] = useState(false);
     const [oilChangeSelected, setOilChangeSelected] = useState(false);
     const [cleaningSelected, setCleaningSelected] = useState(false);
     const normalStyle = {...styles.serviceContainer};
     const selectedStyle = {...styles.serviceContainer,...styles.serviceSelectedContainer};
+    const bookingDetails = useSelector((state)=>state.bookingDetails);
+    console.log(bookingDetails);
     let additionalChanges = 0;
     if(carServicesSelected){
-        additionalChanges+=20;
+        additionalChanges+=100;
     }
     if(oilChangeSelected){
-        additionalChanges+=10;
+        additionalChanges+=80;
     }
     if(cleaningSelected){
-        additionalChanges+=5;
+        additionalChanges+=150;
     }
     let totalBillAmount = additionalChanges+10.50+5;
+    const token = useSelector((state)=>state.userData.token);
+    const makeTheBooking = async()=>{
+        const baseUrl= "https://park-it-proj.herokuapp.com/";
+        try{
+            await axios.post(`${baseUrl}booking/new`,bookingDetails,
+            {
+                headers:{
+                    Authorization: "Bearer "+token,
+                }
+            }
+            ).then((resp)=>{
+                console.log("The booking response: ", resp);
+            })
+        }catch(err){
+            console.log("There was some error",err);
+        }
+    }
+
     return (
         // <View style={styles.screen}>
         //     <Text>This is the service select screen.</Text>
@@ -52,35 +76,66 @@ const ServiceSelectScreen = (props) => {
                     <View style={styles.servicesList}>
                         <TouchableOpacity 
                             style={carServicesSelected?selectedStyle:normalStyle}
-                            onPress={()=>setCarServicesSelected(!carServicesSelected)}
+                            onPress={()=>{
+                                if(carServicesSelected){
+                                    updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_SERVICES, bookingDetails.services.filter((item)=>item!=="61d9b03fc1b14e8979480dc9"));
+                                }else{
+                                    updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_SERVICES,[
+                                        ...bookingDetails.services,
+                                        "61d9b03fc1b14e8979480dc9"
+                                    ]);
+                                }
+                                setCarServicesSelected(!carServicesSelected);
+                            }}
                         >
-                            <Text style={styles.serviceName}>Full Car Service</Text>
+                            <Text style={styles.serviceName}>Car Wash</Text>
                             {
                                 carServicesSelected ?
                                 <FontAwesome name="check-circle" size={24} color="black" />:
-                                <FontAwesome name="gears" size={24} color="black" />
+                                <MaterialIcons name="cleaning-services" size={24} color="black" />
                             }
                         </TouchableOpacity>
                         <TouchableOpacity 
                             style={oilChangeSelected?selectedStyle:normalStyle}
-                            onPress={()=>setOilChangeSelected(!oilChangeSelected)}
+                            onPress={()=>{
+                                if(oilChangeSelected){
+                                    updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_SERVICES, bookingDetails.services.filter((item)=>item!=="61d9b03fc1b14e8979480dca"));
+                                }else{
+                                    updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_SERVICES,[
+                                        ...bookingDetails.services,
+                                        "61d9b03fc1b14e8979480dca"
+                                    ]);
+                                }
+                                setOilChangeSelected(!oilChangeSelected);
+
+                            }}
                         >
-                            <Text style={styles.serviceName}>Oil Change</Text>
+                            <Text style={styles.serviceName}>Tire Change</Text>
                             {
                                 oilChangeSelected?
                                 <FontAwesome name="check-circle" size={24} color="black" />:
-                                <FontAwesome5 name="oil-can" size={24} color="black" />
+                                <MaterialIcons name="car-repair" size={24} color="black" />
                             }
                         </TouchableOpacity>
                         <TouchableOpacity 
                             style={cleaningSelected?selectedStyle:normalStyle}
-                            onPress={()=>setCleaningSelected(!cleaningSelected)}
+                            onPress={()=>{
+                                if(cleaningSelected){
+                                    updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_SERVICES, bookingDetails.services.filter((item)=>item!=="61d9b03fc1b14e8979480dcb"));
+                                }else{
+                                    updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_SERVICES,[
+                                        ...bookingDetails.services,
+                                        "61d9b03fc1b14e8979480dcb"
+                                    ]);
+                                }
+                                setCleaningSelected(!cleaningSelected);
+                            }}
                         >
-                            <Text style={styles.serviceName}>Cleaning</Text>
+                            <Text style={styles.serviceName}>Oil Change</Text>
                             {
                                 cleaningSelected?
                                 <FontAwesome name="check-circle" size={24} color="black" />:
-                                <MaterialIcons name="cleaning-services" size={24} color="black" />
+                                <FontAwesome5 name="oil-can" size={24} color="black" />
                             }
                         </TouchableOpacity>
                     </View>
@@ -111,7 +166,15 @@ const ServiceSelectScreen = (props) => {
                     <Ionicons name="arrow-back-outline" size={24} color="black" />
                     <Text style={styles.cancelText}>Back</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ ...styles.buttonBack, ...styles.buttonConfirm }} onPress={()=>props.navigation.navigate("BookingSuccess")}>
+                <TouchableOpacity style={{ ...styles.buttonBack, ...styles.buttonConfirm }} onPress={async()=>{
+                        updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_AMOUNT, totalBillAmount);
+                        try{
+                            await makeTheBooking();
+                            props.navigation.navigate("BookingSuccess");
+                        }catch{
+                            console.log("There was some error in booking");
+                        }
+                    }}>
                     <Text style={styles.confirmText}>Confirm</Text>
                 </TouchableOpacity>
             </View>

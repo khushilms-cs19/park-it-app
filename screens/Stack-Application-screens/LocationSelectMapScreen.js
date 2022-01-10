@@ -122,7 +122,6 @@ const LocationSelectMapScreen = (props) => {
                 <FontAwesome name="location-arrow" size={30} color="white" />
             </TouchableOpacity>
             <LocationList goToLocationMap={goToLocationMap} setRegion={setRegion} startIndex={selectedIndex} navigation={props.navigation}/>
-
         </SafeAreaView>
     )
 }

@@ -2,10 +2,10 @@ import React, { useState } from 'react'
 import { Dimensions, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'; 
 const ParkingHistoryItem = (props) => {
-    const {time,services,parkingLocation,amount,status} = props.data;
+    const {time,services,parkingLocation,amount,status,name} = props.data;
     const {setModalVisibleOverlay } = props;
     const [modalVisible, setModalVisible] = useState(false);
-    const name="khushil";
+    // const name="khushil";
     return (
         <View>
 
@@ -24,7 +24,7 @@ const ParkingHistoryItem = (props) => {
                             }
                             }/>
                         </View>
-                        <Text style={styles.locationArea}>{location}</Text>
+                        <Text style={styles.locationArea}>{parkingLocation.name}</Text>
                         <View style={styles.timeContainer}>
                             <Text style={styles.startTimeModal}>Start Time:</Text>
                             <Text style={styles.startTimeModal}>{time[0].start}</Text>
@@ -33,7 +33,7 @@ const ParkingHistoryItem = (props) => {
                             <Text style={styles.startTimeModal}>End Time:</Text>
                             <Text style={styles.startTimeModal}>{time[0].start}</Text>
                         </View>
-                        <Text style={styles.spotNumber}>{spotNumber}</Text>
+                        <Text style={styles.spotNumber}>{parkingLocation.name}</Text>
                     </View>
                 </View>
             </Modal>
@@ -43,10 +43,10 @@ const ParkingHistoryItem = (props) => {
             }}>
                 <View>
                     <Text style={styles.locationName}>{name[0].toUpperCase()+name.slice(1)}</Text>
-                    <Text style={styles.locationArea}>{props.data.location}</Text>
+                    <Text style={styles.locationArea}>{name}</Text>
                 </View>
                 <View>
-                    <Text style={styles.spotNumber}>{spotNumber}</Text>
+                    <Text style={styles.spotNumber}>{parkingLocation.name}</Text>
                 </View>
             </TouchableOpacity>
         </View>

@@ -4,14 +4,14 @@ import RNDateTimeSelector from 'react-native-date-time-scroll-picker'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Entypo } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons'; 
-const dataSet = {
-    data: {
-      firstColumn: [...Array(6).keys()].map((item, idx)=> {return {value: item, index: idx}}),
-      secondColumn: [...Array(60).keys()].map((item, idx)=> {return {value: item, index: idx}}),
-      thirdColumn: [...Array(60).keys()].map((item, idx)=> {return {value: item, index: idx}}),
-    },
-    initials: [1,2,5]  
-}
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import updateParkinglotDetails from '../../redux/actions/parkinglotDetailsActions';
+import { parkinglotDetailsConstants } from '../../redux/actionTypes/parkinglotDetailsConstants';
+import AppLoading from 'expo-app-loading';
+import updateBookingDetails from '../../redux/actions/bookingDetailsActions';
+import { bookingDetailsConstants } from '../../redux/actionTypes/bookingDetailsConstants';
+
 
 const ParkingSelectScreen = (props) => {
 
@@ -54,8 +54,33 @@ const ParkingSelectScreen = (props) => {
                 name: "a9",
             },
         ]
-    )
-
+    );
+    const baseUrl = "https://park-it-proj.herokuapp.com/";
+    const token = useSelector((state)=>state.userData.token);
+    const fetchParkingLotDetails = async()=>{
+        const selectedLocationName = props.navigation.getParam("selectedLocationName");
+        await axios.post(`${baseUrl}location/details`,
+        {
+            name: selectedLocationName,
+        },{
+            headers: {
+                Authorization: "Bearer "+token,
+            }
+        }).then((resp)=>{
+            updateParkinglotDetails(parkinglotDetailsConstants.PARKING_LOT_UPDATE_COMPLETE, resp.data);
+        }).catch((err)=>{
+            console.log("there was some error with location details: ",err);
+        })
+    }
+    const selectedLocationName = props.navigation.getParam("selectedLocationName");
+    console.log(selectedLocationName);
+    const parkingLotInfo = useSelector((state)=>state.parkinglotDetails);
+    console.log("parking lot info state : ", parkingLotInfo);
+    const [dataLoaded, setDataLoaded] = useState(false);
+    const [selectedId, setSelectedId] = useState(null);
+    if(!dataLoaded){
+        return <AppLoading startAsync={fetchParkingLotDetails} onFinish={()=>setDataLoaded(true) } onError={(err)=>console.log(err)}/>
+    }
     return (
         // <View style={styles.screen}>
         //     <Text>This is the parking select screen.</Text>
@@ -73,41 +98,69 @@ const ParkingSelectScreen = (props) => {
                     </View>
                     <View>
                         <View style={styles.parkingContainer}>
+                            {/* <View style={styles.parkingTopContainer}>
+                            {
+                                parkingLotData.map((location, index, data)=>{
+                                    if(index === data.length - 1){
+                                        return (
+                                            <View style={styles.parkingCellContainerLast} key={index}>
+                                                <TouchableOpacity style={{...styles.parkingCell, ...styles.parkingCellAvailable}}></TouchableOpacity>
+                                            </View>
+                                        )
+                                    }
+                                    return (
+                                        <View style={styles.parkingCellContainer} key={index}>
+                                            <TouchableOpacity style={{...styles.parkingCell, ...styles.parkingCellAvailable}}></TouchableOpacity>
+                                        </View>
+                                    )
+                                })
+                            }
+                            </View> */}
+                            {/* <View style={styles.parkingBottomContainer}>
+                            {
+                                parkingLotData.map((location, index, data)=>{
+                                    if(index === data.length - 1){
+                                        return (
+                                            <View style={styles.parkingCellContainerLast} key={index}>
+                                                <TouchableOpacity style={{...styles.parkingCell, ...styles.parkingCellAvailable}}></TouchableOpacity>
+                                            </View>
+                                        )
+                                    }
+                                    return (
+                                        <View style={styles.parkingCellContainer} key={index}>
+                                            <TouchableOpacity style={{...styles.parkingCell, ...styles.parkingCellAvailable}}></TouchableOpacity>
+                                        </View>
+                                    )
+                                })
+                            }
+                            </View> */}
                             <View style={styles.parkingTopContainer}>
-                            {
-                                parkingLotData.map((location, index, data)=>{
-                                    if(index === data.length - 1){
+                                {
+                                    parkingLotInfo.parkingSpots.map((item, index)=>{
                                         return (
-                                            <View style={styles.parkingCellContainerLast} key={index}>
-                                                <TouchableOpacity style={{...styles.parkingCell, ...styles.parkingCellAvailable}}></TouchableOpacity>
+                                            <View style={styles.parkingCellContainer} key={index}>
+                                                <TouchableOpacity 
+                                                    style={
+                                                        (selectedId===index)?
+                                                        {
+                                                            ...styles.parkingCell,
+                                                            backgroundColor: "black",
+                                                        }:
+                                                        {...styles.parkingCell, ...styles.parkingCellAvailable,}
+                                                    }
+                                                    onPress={()=>{
+                                                        console.log(item);
+                                                        if(selectedId!==index && !item.occupied){
+                                                            setSelectedId(index);
+                                                            updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_PARKINGLOCATION, item._id);
+                                                        }
+                                                    }}
+                                                >
+                                                </TouchableOpacity>
                                             </View>
                                         )
-                                    }
-                                    return (
-                                        <View style={styles.parkingCellContainer} key={index}>
-                                            <TouchableOpacity style={{...styles.parkingCell, ...styles.parkingCellAvailable}}></TouchableOpacity>
-                                        </View>
-                                    )
-                                })
-                            }
-                            </View>
-                            <View style={styles.parkingBottomContainer}>
-                            {
-                                parkingLotData.map((location, index, data)=>{
-                                    if(index === data.length - 1){
-                                        return (
-                                            <View style={styles.parkingCellContainerLast} key={index}>
-                                                <TouchableOpacity style={{...styles.parkingCell, ...styles.parkingCellAvailable}}></TouchableOpacity>
-                                            </View>
-                                        )
-                                    }
-                                    return (
-                                        <View style={styles.parkingCellContainer} key={index}>
-                                            <TouchableOpacity style={{...styles.parkingCell, ...styles.parkingCellAvailable}}></TouchableOpacity>
-                                        </View>
-                                    )
-                                })
-                            }
+                                    })
+                                }
                             </View>
                         </View>
                     </View>
@@ -170,8 +223,6 @@ const styles = StyleSheet.create({
         borderTopWidth: 2,
     },  
     parkingCellContainer: {
-        borderRightWidth: 2,
-        borderColor: "black",
         height: 70,
         justifyContent: "center",
         alignItems: "center",
@@ -227,3 +278,31 @@ const styles = StyleSheet.create({
 
 })
 
+
+/*
+//extra parking css
+parkingCellContainer: {
+        borderRightWidth: 2,
+        borderColor: "black",
+        height: 70,
+        justifyContent: "center",
+        alignItems: "center",
+    },  
+    parkingCellContainerLast: {
+        height: 70,
+        justifyContent: "center",
+        alignItems: "center",
+    },  
+    parkingCell: {
+        width: Dimensions.get("window").width*0.06,
+        height: Dimensions.get("window").height*0.08,
+        borderRadius: 5,
+        margin: Dimensions.get("window").width*0.05*0.3,
+    },
+    parkingCellAvailable: {
+        backgroundColor: "#93D36B",
+    },
+    parkingCellUnavailable: {
+        backgroundColor: "#ccc",
+    },
+*/ 

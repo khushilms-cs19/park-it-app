@@ -98,6 +98,6 @@ const styles = StyleSheet.create({
     },
     list: {
         height: Dimensions.get("window").height * 0.5,
-        marginTop: Dimensions.get("window").height * 0.6,
+        marginTop: Dimensions.get("window").height * 0.55,
     }
 });

@@ -14,9 +14,12 @@ import updateUserData from '../../redux/actions/userDataActions';
 import { userDataConstants } from '../../redux/actionTypes/userDataConstants';
 import { useSelector } from 'react-redux';
 import AppLoading from 'expo-app-loading';
+import updateAllParkinglots from '../../redux/actions/allParkinglotsActions';
+import { allParkingLotsConstants } from '../../redux/actionTypes/allParkingLotsConstants';
 
 const MainScreen = (props) => {
-    const [modalVisible, setModalVisible] = useState(false);
+    const [logoutModalVisible, setLogoutModalVisible] = useState(false);
+    const [currentBookingModal, setCurrentBookingModal] = useState(false);
     const baseUrl = "https://park-it-proj.herokuapp.com/";
     const userData = useSelector((state)=>state.userData);
     const fetchData = async()=>{
@@ -30,38 +33,50 @@ const MainScreen = (props) => {
         }).catch((err)=>{
             console.log("there some error with the data: ",err);
         });
+
+        await axios.get(`${baseUrl}locations/seed`,{},{
+            headers: {
+                Authorization: "Bearer "+token,
+            }
+        }).then((resp)=>{
+            updateAllParkinglots(allParkingLotsConstants.ALL_PARKING_LOTS_UPDATE_COMPLETE,resp.data);
+        }).catch((err)=>{
+            console.log("There was some error is fetching the parking lots: ",err);
+        })
     }
-    useEffect(async()=>{
-        
-    },[])
+
 
     const logout = async()=>{
         await AsyncStorage.clear();
         props.navigation.navigate("Welcome");
-        setModalVisible(false);
+        setLogoutModalVisible(false);
+        currentBookingModal(false);
         console.log("User has logged out..");
     }
     const [dataLoaded, setDataLoaded] = useState(false);
     if(!dataLoaded){
         return <AppLoading startAsync={fetchData} onFinish={()=>setDataLoaded(true)} onError={(err)=>console.log(err)}/>
     }
-    // if(userData!===)
+    
+
+
+
     return (
         <View style={styles.screen}>
             {/* <Text>This is the main landing screen.</Text>
             <Button title="book parking space" onPress={() => props.navigation.navigate("LocationSelect")} /> */}
             
             {
-                modalVisible &&
+                (logoutModalVisible || currentBookingModal) &&
                 <TouchableOpacity style={styles.modalOverlay}></TouchableOpacity>
             }
             <Modal
                 animationType='slide'
                 transparent={true}
-                visible={modalVisible}
+                visible={logoutModalVisible}
                 onRequestClose={()=>{
                     console.log("main screen modal closed...")
-                    setModalVisible(false);
+                    setLogoutModalVisible(false);
                 }}
             >
                 <View style={styles.modalMain}>
@@ -73,14 +88,33 @@ const MainScreen = (props) => {
                             <TouchableOpacity style={styles.modalButton} onPress={()=>logout()}>
                                 <Text style={styles.modalButtonText}>Confirm</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.modalButton} onPress={()=>setModalVisible(false)}>
+                            <TouchableOpacity style={styles.modalButton} onPress={()=>setLogoutModalVisible(false)}>
                                 <Text style={styles.modalButtonText}>Cancel</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
                 </View>
             </Modal>
-
+            <Modal
+                 animationType='slide'
+                 transparent={true}
+                 visible={currentBookingModal}
+                 onRequestClose={()=>{
+                     console.log("main screen modal closed...")
+                     setCurrentBookingModal(false);
+                 }}
+            >
+                <View style={styles.modalMain}>
+                    <View style={styles.modalContainer}>
+                        <Text style={styles.modalTitle}>This is the current booking</Text>
+                        <View style={styles.modalBottom}>
+                            <TouchableOpacity style={styles.modalButton} onPress={()=>setCurrentBookingModal(false)}>
+                                <Text style={styles.modalButtonText}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
             <View style={styles.topContainer}>
                 <View style={styles.topNavigation}>
                     <TouchableOpacity >
@@ -89,7 +123,7 @@ const MainScreen = (props) => {
                     <TouchableOpacity onPress={()=>props.navigation.navigate("MyProfile")}>
                         <DefaultText fontSize={28} color="white">Profile</DefaultText>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>setModalVisible(true)}>
+                    <TouchableOpacity onPress={()=>setLogoutModalVisible(true)}>
                         <DefaultText fontSize={14} color="white">Logout</DefaultText>
                     </TouchableOpacity>
                 </View>
@@ -121,8 +155,8 @@ const MainScreen = (props) => {
                     <Text style={styles.buttonText}>Book a car service</Text>
                     <Entypo name="tools" size={24} color="#ccc" />
                 </MainScreenButton>
-                <MainScreenButton width={Dimensions.get("window").width*0.8}>
-                    <Text style={styles.buttonText}>Book a parking space</Text>
+                <MainScreenButton width={Dimensions.get("window").width*0.8} onPress={()=>setCurrentBookingModal(true)}>
+                    <Text style={styles.buttonText}>Current Booking Details</Text>
                     <AntDesign name="tag" size={24} color="#ccc" />
                 </MainScreenButton>
             </View>

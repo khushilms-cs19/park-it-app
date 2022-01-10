@@ -3,10 +3,10 @@ import { bookingDetailsConstants } from "../actionTypes/bookingDetailsConstants"
 
 const initialState = {
     location: "",
-    time: ["",""],
-    services: [],
+    time: ["7:15","7:45"],
+    services: Array.from([]),
     parkingLocation: "",
-    amount: "",
+    amount: 15.00,
 }
 
 const bookingDetailsReducer = (state = initialState, action)=>{

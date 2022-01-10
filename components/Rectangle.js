@@ -37,8 +37,12 @@ export const Rectangle = (props) => {
                 </View>
             </View>
             <CustomBigButton onPress={()=>{
-                    updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_LOCATION, props.title);
-                    props.navigation.navigate("ParkingSelect");
+                    const locationName = props.title.split(" ").map((item)=>item[0].toUpperCase()+item.slice(1)).join(" ");
+                    updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_LOCATION, locationName);
+                    
+                    props.navigation.navigate("ParkingSelect",{
+                        selectedLocationName: locationName,
+                    });
                 }}>
                 Select
             </CustomBigButton>
