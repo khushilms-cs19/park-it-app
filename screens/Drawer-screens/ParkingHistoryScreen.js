@@ -1,6 +1,6 @@
 import axios from 'axios';
 import AppLoading from 'expo-app-loading';
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { FlatList, StyleSheet, Text, TouchableOpacity, View, Dimensions} from 'react-native'
 import { useSelector } from 'react-redux';
 import MenuButton from '../../components/MenuButton';
@@ -26,63 +26,28 @@ const ParkingHistoryScreen = (props) => {
         });
     }
 
-    const data = [
-        {
-            id: 1,
-            name: "mantri square",
-            location: "Malleswaram, Bangalore",
-            spotNumber: 'A2',
-            startTime: "7:15",
-            endTime: "7:45",
-        },
-        {
-            id: 2,
-            name: "orion mall",
-            location: "Rajajinagar, Bangalore",
-            spotNumber: 'A2',
-            startTime: "7:15",
-            endTime: "7:45",
-        },
-        {
-            id: 3,
-            name: "lalit ashok",
-            location: "KK Road, Bangalore",
-            spotNumber: 'A2',
-            startTime: "7:15",
-            endTime: "7:45",
-        },
-        {
-            id: 4,
-            name: "truffles",
-            location: "St. Marks Road, Bangalore",
-            spotNumber: 'A2',
-            startTime: "7:15",
-            endTime: "7:45",
-        },
-        {
-            id: 5,
-            name: "church street social",
-            location: "Church Street, Bangalore",
-            spotNumber: 'A2',
-            startTime: "7:15",
-            endTime: "7:45",
-        },
-    ]
-    let parkingHistoryData = useSelector((state)=>state.parkingHistory);
-    const allParkingData = useSelector((state)=>state.allParkinglots);
-    console.log(allParkingData,parkingHistoryData);
-    parkingHistoryData = parkingHistoryData.map((item)=>{
-        console.log(allParkingData.find((location)=>{
-            console.log(location._id, item.parkingLocation._id);
-            return location._id===item.parkingLocation._id
-        }));
-        const nameT = allParkingData.find((location)=>location._id===item.parkingLocation._id).name
-        return {
-            ...item,
-            name: nameT,
 
+    const parkingHistoryData = useSelector((state)=>state.parkingHistory);
+    console.log(parkingHistoryData);
+    // const allParkingData = useSelector((state)=>state.allParkinglots);
+    // console.log(allParkingData,parkingHistoryData);
+    // parkingHistoryData = parkingHistoryData.map((item)=>{
+    //     console.log(allParkingData.find((location)=>{
+    //         console.log(location._id, item.parkingLocation._id);
+    //         return location._id===item.parkingLocation._id
+    //     }));
+    //     const nameT = allParkingData.find((location)=>location._id===item.parkingLocation._id).name
+    //     return {
+    //         ...item,
+    //         name: nameT,
+
+    //     }
+    // })
+    useEffect(()=>{
+        return ()=>{
+            setDataLoaded(false);
         }
-    })
+    },[]);
     console.log(parkingHistoryData);
     const [modalVisibleOverlay, setModalVisibleOverlay] = useState(false);
     if(!dataLoaded){
@@ -108,7 +73,7 @@ const ParkingHistoryScreen = (props) => {
                     renderItem={(item)=>{
                         return <ParkingHistoryItem data={item.item} setModalVisibleOverlay={setModalVisibleOverlay}/>
                     }}
-                    keyExtractor={(item)=>item.id}
+                    keyExtractor={(item, index)=>index}
                 />
             </View>
         </View>

@@ -10,10 +10,13 @@ import updateBookingDetails from '../../redux/actions/bookingDetailsActions';
 import { bookingDetailsConstants } from '../../redux/actionTypes/bookingDetailsConstants';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const ServiceSelectScreen = (props) => {
     const [carServicesSelected, setCarServicesSelected] = useState(false);
     const [oilChangeSelected, setOilChangeSelected] = useState(false);
     const [cleaningSelected, setCleaningSelected] = useState(false);
+    const [errorOccured, setErrorOccured] = useState(false);
+    const parkingSpotSelected = props.navigation.getParam("parkingSpotSelected")
     const normalStyle = {...styles.serviceContainer};
     const selectedStyle = {...styles.serviceContainer,...styles.serviceSelectedContainer};
     const bookingDetails = useSelector((state)=>state.bookingDetails);
@@ -32,6 +35,8 @@ const ServiceSelectScreen = (props) => {
     const token = useSelector((state)=>state.userData.token);
     const makeTheBooking = async()=>{
         const baseUrl= "https://park-it-proj.herokuapp.com/";
+        const token = await AsyncStorage.getItem("token");
+        console.log(bookingDetails);
         try{
             await axios.post(`${baseUrl}booking/new`,bookingDetails,
             {
@@ -41,12 +46,18 @@ const ServiceSelectScreen = (props) => {
             }
             ).then((resp)=>{
                 console.log("The booking response: ", resp);
+                updateBookingDetails("clear",[]);
             })
         }catch(err){
             console.log("There was some error",err);
         }
+        updateBookingDetails("clear",[]);
     }
+    if(errorOccured){
+        return <View>
 
+        </View>
+    }
     return (
         // <View style={styles.screen}>
         //     <Text>This is the service select screen.</Text>
@@ -59,12 +70,12 @@ const ServiceSelectScreen = (props) => {
                     <Text style={styles.bookingDetailsTitle}>Booking Details</Text>
                     <View style={styles.bookingTimeContainer}>
                         <View style={styles.cellNumberContainer}>
-                            <Text style={styles.cellNumberText}>C2</Text>
+                            <Text style={styles.cellNumberText}>{parkingSpotSelected}</Text>
                         </View>
                         <View style={styles.timeContainer}>
-                            <Text style={styles.timeText}>7 : 15 PM</Text>
+                            <Text style={styles.timeText}>{bookingDetails.time[0]} PM</Text>
                             <Text style={styles.timeText}>to</Text>
-                            <Text style={styles.timeText}>7 : 45 PM</Text>
+                            <Text style={styles.timeText}>{bookingDetails.time[1]} PM</Text>
                         </View>
                     </View>
                 </View>
@@ -79,11 +90,13 @@ const ServiceSelectScreen = (props) => {
                             onPress={()=>{
                                 if(carServicesSelected){
                                     updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_SERVICES, bookingDetails.services.filter((item)=>item!=="61d9b03fc1b14e8979480dc9"));
+                                    updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_AMOUNT,bookingDetails.amount-100)
                                 }else{
                                     updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_SERVICES,[
                                         ...bookingDetails.services,
                                         "61d9b03fc1b14e8979480dc9"
                                     ]);
+                                    updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_AMOUNT,bookingDetails.amount+100);
                                 }
                                 setCarServicesSelected(!carServicesSelected);
                             }}
@@ -100,14 +113,15 @@ const ServiceSelectScreen = (props) => {
                             onPress={()=>{
                                 if(oilChangeSelected){
                                     updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_SERVICES, bookingDetails.services.filter((item)=>item!=="61d9b03fc1b14e8979480dca"));
+                                    updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_AMOUNT,bookingDetails.amount-80)
                                 }else{
                                     updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_SERVICES,[
                                         ...bookingDetails.services,
                                         "61d9b03fc1b14e8979480dca"
                                     ]);
+                                    updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_AMOUNT,bookingDetails.amount+80)
                                 }
                                 setOilChangeSelected(!oilChangeSelected);
-
                             }}
                         >
                             <Text style={styles.serviceName}>Tire Change</Text>
@@ -122,11 +136,13 @@ const ServiceSelectScreen = (props) => {
                             onPress={()=>{
                                 if(cleaningSelected){
                                     updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_SERVICES, bookingDetails.services.filter((item)=>item!=="61d9b03fc1b14e8979480dcb"));
+                                    updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_AMOUNT,bookingDetails.amount-150)
                                 }else{
                                     updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_SERVICES,[
                                         ...bookingDetails.services,
                                         "61d9b03fc1b14e8979480dcb"
                                     ]);
+                                    updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_AMOUNT,bookingDetails.amount+150)
                                 }
                                 setCleaningSelected(!cleaningSelected);
                             }}

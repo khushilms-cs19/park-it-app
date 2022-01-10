@@ -107,8 +107,7 @@ const LocationSelectMapScreen = (props) => {
                     <Marker
                         coordinate={{longitude: region.longitude, latitude: region.latitude}}
                         pinColor={"black"}
-                        title={"Mantri Sq."}
-                        description={"Mantri Sq."}
+                        
                     />
                 </MapView>
             {/* <View>

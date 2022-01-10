@@ -40,7 +40,7 @@ const BookingSuccessScreen = (props) => {
     return (
         // <View style={styles.screen}>
         //     <Text>This is the booking success screen.</Text>
-        //     <Button title="Home" onPress={()=>props.navigation.popToTop()}/>
+    //     <Button title="Home" onPress={()=>props.navigation.popToTop()}/>
         // </View>
         <View style={styles.screen}>
             <View style={styles.centerBox}>

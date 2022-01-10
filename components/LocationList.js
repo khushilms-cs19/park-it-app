@@ -12,7 +12,7 @@ export const LocationList = (props) => {
             latitude: 12.991781776826029,
         },
         {
-            name: "orion mall.",
+            name: "orion mall",
             location: "Rajajinagar, Bangalore.",
             longitude:  77.55512877009176,
             latitude: 13.011235898411575,
@@ -74,7 +74,7 @@ export const LocationList = (props) => {
                     keyExtractor={(item) => item.location}
                     renderItem={({ item }) => {
                         return (
-                            <Rectangle title={item.name} status={true} goToLocationMap={props.goToLocationMap} navigation={props.navigation}/>
+                            <Rectangle title={item.name} status={true} goToLocationMap={props.goToLocationMap} navigation={props.navigation} />
                         )
                     }}
                     horizontal

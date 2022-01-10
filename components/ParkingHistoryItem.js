@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
 import { Dimensions, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'; 
+import QRCode from 'react-native-qrcode-svg';
 const ParkingHistoryItem = (props) => {
-    const {time,services,parkingLocation,amount,status,name} = props.data;
+    const {time,services,parkingLocation,amount,location,status, _id} = props.data;
     const {setModalVisibleOverlay } = props;
     const [modalVisible, setModalVisible] = useState(false);
-    // const name="khushil";
     return (
         <View>
-
             <Modal
                 animationType='slide'
                 transparent= {true}
@@ -17,21 +16,24 @@ const ParkingHistoryItem = (props) => {
                 <View style={styles.modalMain}>
                     <View style={styles.modalContainer}>
                         <View style={styles.cancelContainer}>
-                            <Text style={styles.locationName}>{name[0].toUpperCase()+name.slice(1)}</Text>
+                            <Text style={styles.locationName}>{location?location.name[0].toUpperCase()+location.name.slice(1): "Filler Name"}</Text>
                             <MaterialIcons name="cancel" size={30} color="black" onPress={()=>{
                                 setModalVisible(false)
                                 setModalVisibleOverlay(false)
                             }
                             }/>
                         </View>
-                        <Text style={styles.locationArea}>{parkingLocation.name}</Text>
+                        <View style={styles.locationArea}>
+                            <QRCode value={_id} />
+                        </View>
+                        <Text style={styles.locationArea}>Booking Reference ID: {_id}</Text>
                         <View style={styles.timeContainer}>
                             <Text style={styles.startTimeModal}>Start Time:</Text>
                             <Text style={styles.startTimeModal}>{time[0].start}</Text>
                         </View>
                         <View style={styles.timeContainer}>
                             <Text style={styles.startTimeModal}>End Time:</Text>
-                            <Text style={styles.startTimeModal}>{time[0].start}</Text>
+                            <Text style={styles.startTimeModal}>{time[0].end}</Text>
                         </View>
                         <Text style={styles.spotNumber}>{parkingLocation.name}</Text>
                     </View>
@@ -42,8 +44,8 @@ const ParkingHistoryItem = (props) => {
                 setModalVisibleOverlay(true);
             }}>
                 <View>
-                    <Text style={styles.locationName}>{name[0].toUpperCase()+name.slice(1)}</Text>
-                    <Text style={styles.locationArea}>{name}</Text>
+                    <Text style={styles.locationName}>{location?location.name[0].toUpperCase()+location.name.slice(1): "Filler name"}</Text>
+                    {/* <Text style={styles.locationArea}>{name}</Text> */}
                 </View>
                 <View>
                     <Text style={styles.spotNumber}>{parkingLocation.name}</Text>
@@ -73,6 +75,13 @@ const styles = StyleSheet.create({
     },
     locationArea: {
         fontFamily: "open-sans",
+        padding: 10,
+        margin: 10,
+        borderRadius: 5,
+        borderColor: "black",
+        borderWidth:1,
+        justifyContent: "center",
+        alignItems: "center",
     },
     spotNumber: {
         fontFamily: "open-sans-bold",

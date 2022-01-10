@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, Button, Dimensions, ScrollView } from 'react-native'
 import RNDateTimeSelector from 'react-native-date-time-scroll-picker'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -11,50 +11,9 @@ import { parkinglotDetailsConstants } from '../../redux/actionTypes/parkinglotDe
 import AppLoading from 'expo-app-loading';
 import updateBookingDetails from '../../redux/actions/bookingDetailsActions';
 import { bookingDetailsConstants } from '../../redux/actionTypes/bookingDetailsConstants';
-
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const ParkingSelectScreen = (props) => {
-
-    const [parkingLotData, setParkingLotData] = useState(
-        [
-            {
-                status: "available",
-                name: "a1",
-            },
-            {
-                status: "available",
-                name: "a2",
-            },
-            {
-                status: "available",
-                name: "a3",
-            },
-            {
-                status: "available",
-                name: "a4",
-            },
-            {
-                status: "available",
-                name: "a5",
-            },
-            {
-                status: "available",
-                name: "a6",
-            },
-            {
-                status: "available",
-                name: "a7",
-            },
-            {
-                status: "available",
-                name: "a8",
-            },
-            {
-                status: "available",
-                name: "a9",
-            },
-        ]
-    );
     const baseUrl = "https://park-it-proj.herokuapp.com/";
     const token = useSelector((state)=>state.userData.token);
     const fetchParkingLotDetails = async()=>{
@@ -68,6 +27,7 @@ const ParkingSelectScreen = (props) => {
             }
         }).then((resp)=>{
             updateParkinglotDetails(parkinglotDetailsConstants.PARKING_LOT_UPDATE_COMPLETE, resp.data);
+            updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_LOCATION, resp.data._id);
         }).catch((err)=>{
             console.log("there was some error with location details: ",err);
         })
@@ -78,6 +38,41 @@ const ParkingSelectScreen = (props) => {
     console.log("parking lot info state : ", parkingLotInfo);
     const [dataLoaded, setDataLoaded] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
+    const [parkingSpotSelected, setParkingSpotSelected] = useState(null);
+    
+    
+    const [showStartTimeSelector, setShowStartTimeSelector] = useState(false);
+    const [showEndTimeSelector, setShowEndTimeSelector] = useState(false);
+    const [date, setDate] = useState(new Date(1598051730000));
+    const bookingDetails = useSelector((state)=>state.bookingDetails);
+    let startTime = "";
+    let endTime = "";
+    const timeChangeHandlerStart = (value)=>{
+        const date = new Date(value.nativeEvent.timestamp);
+        startTime = date.getHours() + ":" + date.getMinutes();
+        setShowStartTimeSelector(false);
+        updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_TIME,[startTime,bookingDetails.time[1]]);
+    }
+    const timeChangeHandlerEnd = (value)=>{
+        const date = new Date(value.nativeEvent.timestamp);
+        endTime = date.getHours() + ":" + date.getMinutes();
+        if(date.getHours()>= startTime.split(":")[0]){
+            if(date.getHours()> startTime.split(":")[0]){
+                setShowEndTimeSelector(false);
+                updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_TIME,[bookingDetails.time[0], endTime]);
+            }else{
+                if(date.getMinutes()>startTime.split(":")[1]){
+                    setShowEndTimeSelector(false);
+                    updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_TIME,[bookingDetails.time[0], endTime]);
+                }
+            }
+        }
+    }
+    useEffect(()=>{
+        return ()=>{
+            setDataLoaded(false);
+        }
+    },[])
     if(!dataLoaded){
         return <AppLoading startAsync={fetchParkingLotDetails} onFinish={()=>setDataLoaded(true) } onError={(err)=>console.log(err)}/>
     }
@@ -90,11 +85,41 @@ const ParkingSelectScreen = (props) => {
             <ScrollView>
 
                 <View>
-                    <View style={styles.timeSelectContainer}>
-                        <Text style={styles.timeSelectText}>Start Time  7 : 15</Text>
+                    <TouchableOpacity style={styles.timeSelectContainer} onPress={()=>setShowStartTimeSelector(true)}>
+                        <Text style={styles.timeSelectText}>Start Time  {bookingDetails.time[0]}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.timeSelectContainer} onPress={()=>setShowEndTimeSelector(true)}>
+                        <Text style={styles.timeSelectText}>End Time  {bookingDetails.time[1]}</Text>
+                    </TouchableOpacity>
+                    <View>
+                        {
+                            showStartTimeSelector &&
+                            <DateTimePicker
+                                testID="dateTimePicker"
+                                value={date}
+                                mode={"time"}
+                                is24Hour={false}
+                                display="default"
+                                onChange={timeChangeHandlerStart}
+                                minuteInterval={15}
+                                locale="en_IN"
+                            />
+                        }
                     </View>
-                    <View style={styles.timeSelectContainer}>
-                        <Text style={styles.timeSelectText}>End Time  7 : 45</Text>
+                    <View>
+                    {
+                            showEndTimeSelector &&
+                            <DateTimePicker
+                                testID="dateTimePicker"
+                                value={date}
+                                mode={"time"}
+                                is24Hour={false}
+                                display="default"
+                                onChange={timeChangeHandlerEnd}
+                                minuteInterval={15}
+                                locale="en_IN"
+                            />
+                        }
                     </View>
                     <View>
                         <View style={styles.parkingContainer}>
@@ -136,12 +161,12 @@ const ParkingSelectScreen = (props) => {
                             </View> */}
                             <View style={styles.parkingTopContainer}>
                                 {
-                                    parkingLotInfo.parkingSpots.map((item, index)=>{
+                                    parkingLotInfo.parkingSpots.slice(0,6).map((item, index)=>{
                                         return (
                                             <View style={styles.parkingCellContainer} key={index}>
                                                 <TouchableOpacity 
                                                     style={
-                                                        (selectedId===index)?
+                                                        (parkingSpotSelected===item.name)?
                                                         {
                                                             ...styles.parkingCell,
                                                             backgroundColor: "black",
@@ -150,9 +175,39 @@ const ParkingSelectScreen = (props) => {
                                                     }
                                                     onPress={()=>{
                                                         console.log(item);
-                                                        if(selectedId!==index && !item.occupied){
+                                                        if(parkingSpotSelected!==item.name && !item.occupied){
                                                             setSelectedId(index);
                                                             updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_PARKINGLOCATION, item._id);
+                                                            setParkingSpotSelected(item.name);
+                                                        }
+                                                    }}
+                                                >
+                                                </TouchableOpacity>
+                                            </View>
+                                        )
+                                    })
+                                }
+                            </View>
+                            <View style={styles.parkingBottomContainer}>
+                            {
+                                    parkingLotInfo.parkingSpots.slice(6).map((item, index)=>{
+                                        return (
+                                            <View style={styles.parkingCellContainer} key={index}>
+                                                <TouchableOpacity 
+                                                    style={
+                                                        (parkingSpotSelected===item.name)?
+                                                        {
+                                                            ...styles.parkingCell,
+                                                            backgroundColor: "black",
+                                                        }:
+                                                        {...styles.parkingCell, ...styles.parkingCellAvailable,}
+                                                    }
+                                                    onPress={()=>{
+                                                        console.log(item);
+                                                        if(parkingSpotSelected!==item.name && !item.occupied){
+                                                            setSelectedId(index);
+                                                            updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_PARKINGLOCATION, item._id);
+                                                            setParkingSpotSelected(item.name);
                                                         }
                                                     }}
                                                 >
@@ -164,14 +219,27 @@ const ParkingSelectScreen = (props) => {
                             </View>
                         </View>
                     </View>
+                    <Text style={styles.parkingSpotSelectedText}>
+                        The parking spot selected is: {parkingSpotSelected}
+                    </Text>
                 </View>
             </ScrollView>
             <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.buttonBack} onPress={()=>props.navigation.pop()}>
+                <TouchableOpacity style={styles.buttonBack} onPress={()=>{
+                    props.navigation.pop()
+                    updateBookingDetails("clear", []);
+                    }}>
                     <Entypo name="cross" size={24} color="black" />
                     <Text style={styles.cancelText}>Cancel</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{...styles.buttonBack, ...styles.buttonConfirm}} onPress={()=>props.navigation.navigate("ServiceSelect")}>
+                <TouchableOpacity style={{...styles.buttonBack, ...styles.buttonConfirm}} onPress={()=>{
+                        if(parkingSpotSelected !== null){
+                                props.navigation.navigate("ServiceSelect",{
+                                    parkingSpotSelected: parkingSpotSelected,
+                            })
+                        }
+                    }   
+                }>
                     <Text style={styles.confirmText}>Confirm</Text>
                     <Ionicons name="ios-chevron-forward-circle-outline" size={24} color="white" />
                 </TouchableOpacity>
@@ -203,7 +271,7 @@ const styles = StyleSheet.create({
     },
     parkingContainer: {
         width: Dimensions.get("window").width*0.9,
-        height: 300,
+        // height: 300,
         backgroundColor: "white",
         elevation: 2,
         padding: 20,
@@ -215,6 +283,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         borderBottomColor: "black",
         borderBottomWidth: 2,
+        flexWrap: "wrap",
+        marginBottom: 50,
     },  
     parkingBottomContainer: {
         flexDirection: "row",
@@ -275,6 +345,11 @@ const styles = StyleSheet.create({
         fontFamily: "open-sans-bold",
         fontSize: 18,
     },
+    parkingSpotSelectedText:{
+        fontFamily: "open-sans-bold",
+        fontSize: 15,
+        padding: 10,
+    }
 
 })
 

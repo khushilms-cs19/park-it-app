@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, Button, Image, Dimensions, Modal, TouchableOpacity} from 'react-native'
+import { StyleSheet, Text, View, Button, Image, Dimensions, Modal, TouchableOpacity, ActivityIndicator} from 'react-native'
 import { Ionicons } from "@expo/vector-icons";
 import DefaultText from '../../components/DefaultText';
 import CustomBigButton from '../../components/CustomBigButton';
@@ -34,15 +34,6 @@ const MainScreen = (props) => {
             console.log("there some error with the data: ",err);
         });
 
-        await axios.get(`${baseUrl}locations/seed`,{},{
-            headers: {
-                Authorization: "Bearer "+token,
-            }
-        }).then((resp)=>{
-            updateAllParkinglots(allParkingLotsConstants.ALL_PARKING_LOTS_UPDATE_COMPLETE,resp.data);
-        }).catch((err)=>{
-            console.log("There was some error is fetching the parking lots: ",err);
-        })
     }
 
 
@@ -54,8 +45,14 @@ const MainScreen = (props) => {
         console.log("User has logged out..");
     }
     const [dataLoaded, setDataLoaded] = useState(false);
+    const [errorOccured, setErrorOccured] = useState(false);
     if(!dataLoaded){
-        return <AppLoading startAsync={fetchData} onFinish={()=>setDataLoaded(true)} onError={(err)=>console.log(err)}/>
+        return <AppLoading startAsync={fetchData} onFinish={()=>setDataLoaded(true)} onError={(err)=>setErrorOccured(true)}/>
+    }
+    if(errorOccured){
+        return <View style={styles.errorLoading}>
+            <ActivityIndicator size="large" color="black"/>
+        </View>
     }
     
 
@@ -261,5 +258,13 @@ const styles = StyleSheet.create({
         fontFamily: "open-sans-bold",
         color: "white",
         fontSize: 15,
+    },
+    errorLoading: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        transform: [{
+            scale: 2,
+        }]
     }
 })

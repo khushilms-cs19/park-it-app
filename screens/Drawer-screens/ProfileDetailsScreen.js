@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View, Keyboard, ScrollView, Modal, Button} from 'react-native'
+import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View, Keyboard, ScrollView, Modal, Button, Alert} from 'react-native'
 import { TextInput } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import CustomBigButton from '../../components/CustomBigButton';
@@ -15,6 +15,16 @@ const ProfileDetailsScreen = (props) => {
     const userData = useSelector((state)=>state.userData);
     const changeUserPassword = ()=>{
         console.log("The user password changed")
+        if(password !==confirmPassword){
+            Alert.alert("The passwords dont match","Re enter proper password",[
+                {
+                    text: "Ok",
+                    onPress: ()=>{}
+                }
+            ])
+        }else{
+            // updateUserData()
+        }
         setModalVisible(false);
     }
     const changeInFirstName = (value)=>{
@@ -48,7 +58,15 @@ const ProfileDetailsScreen = (props) => {
         };
     }, []);
     const [modalVisible, setModalVisible] = useState(false);
-    
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+
+    const onPasswordChange = (text)=>{
+        setPassword(text);
+    }
+    const onConfirmPasswordChange = (text)=>{
+        setConfirmPassword(text);
+    }
     return (
         <ScrollView contentContainerStyle={styles.screen}>
             {
@@ -64,13 +82,13 @@ const ProfileDetailsScreen = (props) => {
                     <View style={styles.modalContainer}>
                         <Text style={styles.modalTitle}>Change Password</Text>
                         <View>
-                            <CustomTextInput placeholder='New password' passwordTrue={true}/>
-                            <CustomTextInput placeholder='Confirm new password' passwordTrue={true}/>
+                            <CustomTextInput placeholder='New password' passwordTrue={true} onChangeHandler={onPasswordChange}/>
+                            <CustomTextInput placeholder='Confirm new password' passwordTrue={true} onChangeHandler={onConfirmPasswordChange}/>
                             <View style={styles.buttonContainer}>
-                                <TouchableOpacity style={styles.modalButton} onPress={changeUserPassword}>
+                                <TouchableOpacity style={styles.modalButton} onPress={changeUserPassword} >
                                     <Text style={styles.buttonText}>Confirm</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.modalButton} onPress={()=>setModalVisible(false)}>
+                                <TouchableOpacity style={styles.modalButton} onPress={()=>setModalVisible(false)} >
                                     <Text style={styles.buttonText}>Exit</Text>
                                 </TouchableOpacity>
                             </View>
@@ -107,6 +125,10 @@ const ProfileDetailsScreen = (props) => {
                 </View>
                 <TouchableOpacity style={styles.changePassword} onPress={()=>setModalVisible(true)}>
                     <Text style={styles.changePasswordText}>Change Password</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.changePassword} >
+                    <Text style={styles.changePasswordText}>Save Change</Text>
                 </TouchableOpacity>
             </View>
         </ScrollView>
@@ -181,7 +203,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         justifyContent: "center",
         alignItems: "center", 
-        margin: 0,
+        marginVertical: 10,
     },
     changePasswordText: {
         fontFamily: "open-sans-bold",

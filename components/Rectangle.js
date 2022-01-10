@@ -4,9 +4,10 @@ import CustomBigButton from "./CustomBigButton";
 import {AntDesign} from "@expo/vector-icons";
 import updateBookingDetails from "../redux/actions/bookingDetailsActions";
 import { bookingDetailsConstants } from "../redux/actionTypes/bookingDetailsConstants";
+import { useSelector } from "react-redux";
 
 export const Rectangle = (props) => {
-
+    const parkingLotInfo = useSelector((state)=>state.parkinglotDetailsc);
     if (props.title == "filler") {
         return (
             <View style={styles.fillerRectangle}>
@@ -22,9 +23,9 @@ export const Rectangle = (props) => {
                         props.status ?
                         "Parking Available":
                         "Parking Unavailable"
-                    }: </Text>
+                    } </Text>
                     <Text style={styles.parkingCount}>
-                        {props.parkingAvailableCount? props.parkingAvailableCount: "0"}
+                        {props.parkingAvailableCount? props.parkingAvailableCount: ""}
                     </Text>
                 </View>
                 <View style={props.status?styles.availableStyle :styles.unavailableStyle}>
@@ -38,7 +39,7 @@ export const Rectangle = (props) => {
             </View>
             <CustomBigButton onPress={()=>{
                     const locationName = props.title.split(" ").map((item)=>item[0].toUpperCase()+item.slice(1)).join(" ");
-                    updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_LOCATION, locationName);
+                    
                     
                     props.navigation.navigate("ParkingSelect",{
                         selectedLocationName: locationName,
