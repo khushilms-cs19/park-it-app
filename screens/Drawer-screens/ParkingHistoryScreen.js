@@ -20,7 +20,7 @@ const ParkingHistoryScreen = (props) => {
             }
         }).then((resp)=>{
             console.log("The result of the parking history: ",resp.data);
-            updateParkingHistory(parkingHistoryConstants.PARKING_HISTORY_UPDATE_COMPLETE,resp.data);
+            updateParkingHistory(parkingHistoryConstants.PARKING_HISTORY_UPDATE_COMPLETE,resp.data.reverse());
         }).catch((err)=>{
             console.log("The error: ",err);
         });

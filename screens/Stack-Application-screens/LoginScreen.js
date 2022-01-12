@@ -33,6 +33,7 @@ const LoginScreen = (props) => {
             //     console.log("Got from the local storage : ",resp);
             // })
         }).catch((err)=>{
+            console.log(err)
             console.log("caught the error");
             Alert.alert("Login Error", "Try to login again",{
                 text: "Try Again",
