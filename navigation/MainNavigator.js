@@ -30,12 +30,6 @@ const MainApplicationDrawer = createDrawerNavigator({
             title: "Customer Support",
         }
     },
-    Coupons: {
-        screen: CouponsScreen,
-        navigationOptions: {
-            title: "Log Out",
-        }
-    },
 },{
     drawerWidth: 250,
     drawerStyle:{

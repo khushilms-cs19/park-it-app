@@ -12,6 +12,7 @@ const SignupScreen = (props) => {
     const [userName, setUserName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [phone, setPhone] = useState("");
     const changeUserName = (value)=>{
         setUserName(value);
     } 
@@ -21,18 +22,22 @@ const SignupScreen = (props) => {
     const changePassword = (value)=>{
         setPassword(value);
     }
+    const changePhone = (value)=>{
+        setPhone(value);
+    }
     const signup = async()=>{
         await axios.post(`${baseUrl}signup/`,{
             name: userName,
             email: email,
             password: password,
-            phone: "9036206110"
+            phone: phone
         }).then((resp)=>{
             console.log(resp);
         }).catch((err)=>{
             console.log("There some error : ", err);
         });
     }
+    
     console.log(userName, email, password);
     return (
         <View style={styles.screen}>
@@ -53,16 +58,18 @@ const SignupScreen = (props) => {
                     <View style={styles.inputContainer}>
                         <CustomTextInput placeholder={"Name"} onChangeHandler = {changeUserName}/>
                         <CustomTextInput placeholder={"Email"} onChangeHandler={changeEmail}/>
+                        <CustomTextInput placeholder={"Phone number"} onChangeHandler={changePhone}/>
                         <CustomTextInput placeholder={"Password"} onChangeHandler={changePassword} passwordTrue={true}/>
                     </View>
                     <CustomBigButton onPress={async() =>{
                         try{
                             await signup();
-                            const navigateAction = StackActions.reset({
-                                index: 0,
-                                actions: [NavigationActions.navigate({routeName: "Main"})],        
-                            });
-                            props.navigation.dispatch(navigateAction);
+                            // const navigateAction = StackActions.reset({
+                            //     index: 0,
+                            //     actions: [NavigationActions.navigate({routeName: "Main"})],        
+                            // });
+                            // props.navigation.dispatch(navigateAction);
+                            props.navigation.navigate("Login")
                         }catch{
                             Alert.alert("Signup Error","There was an error in sign up, try again later",[
                                 {

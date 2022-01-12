@@ -18,7 +18,6 @@ const MainApplicationDrawer = createDrawerNavigator({
     Coupons: {
         screen: CouponsScreen,
     },
-    
 },{
     drawerWidth: 200,
 })

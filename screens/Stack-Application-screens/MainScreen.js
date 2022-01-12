@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, Button, Image, Dimensions, Modal, TouchableOpacity, ActivityIndicator} from 'react-native'
+import { StyleSheet, Text, View, Button, Image, Dimensions, Modal, TouchableOpacity, ActivityIndicator, Alert} from 'react-native'
 import { Ionicons } from "@expo/vector-icons";
 import DefaultText from '../../components/DefaultText';
 import CustomBigButton from '../../components/CustomBigButton';
@@ -167,13 +167,28 @@ const MainScreen = (props) => {
                     <Text style={styles.buttonText}>Book a parking space</Text>
                     <FontAwesome5 name="car-side" size={24} color="#ccc"/>
                 </MainScreenButton>
-                <MainScreenButton width={Dimensions.get("window").width*0.8}>
+
+                {/* <MainScreenButton width={Dimensions.get("window").width*0.8}>
                     <Text style={styles.buttonText}>Book a car service</Text>
                     <Entypo name="tools" size={24} color="#ccc" />
-                </MainScreenButton>
+                </MainScreenButton> */}
+
                 <MainScreenButton width={Dimensions.get("window").width*0.8} onPress={()=>{
-                        if(parkingHistory!==[]){
+                        if(parkingHistory.length!==0){
                             setCurrentBookingModal(true)
+                        }else{
+                            Alert.alert("You have no current bookings.","",[
+                                {
+                                    text: "Book a spot?",
+                                    onPress: ()=>{
+                                        props.navigation.navigate("LocationSelect")
+                                    }
+                                },
+                                {
+                                    text: "Cancel",
+                                    onPress: ()=>{}
+                                }
+                            ])
                         }
                     }}>
                     <Text style={styles.buttonText}>Current Booking Details</Text>

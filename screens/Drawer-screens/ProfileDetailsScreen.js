@@ -11,7 +11,7 @@ import updateUserData from '../../redux/actions/userDataActions';
 import { userDataConstants } from '../../redux/actionTypes/userDataConstants';
 import { store } from '../../redux/store'; 
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import UserImage from "../../assets/images/user_icon.svg"
+
 const ProfileDetailsScreen = (props) => {
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
     const userData = useSelector((state)=>state.userData);
@@ -25,8 +25,8 @@ const ProfileDetailsScreen = (props) => {
         await axios.post(`${baseUrl}user/update/`,{
             name: userName,
             email: email,
-            password: passwordValue,
-            phone: "9036206110"
+            password: password,
+            phone: phno
         },{
             headers: {
                 Authorization: "Bearer "+ token,
@@ -53,7 +53,6 @@ const ProfileDetailsScreen = (props) => {
                 }
             ])
         }else{
-            setPasswordValue(password);
             updateUserData()
         }
         setModalVisible(false);
