@@ -16,12 +16,29 @@ import { useSelector } from 'react-redux';
 import AppLoading from 'expo-app-loading';
 import updateAllParkinglots from '../../redux/actions/allParkinglotsActions';
 import { allParkingLotsConstants } from '../../redux/actionTypes/allParkingLotsConstants';
-
+import UserImage from "../../assets/images/user_icon.svg"
+import ParkingHistoryItem from '../../components/ParkingHistoryItem';
+import updateParkingHistory from '../../redux/actions/parkingHistoryActions';
+import { parkingHistoryConstants } from '../../redux/actionTypes/parkingHistoryConstants';
 const MainScreen = (props) => {
     const [logoutModalVisible, setLogoutModalVisible] = useState(false);
     const [currentBookingModal, setCurrentBookingModal] = useState(false);
+    const parkingHistory = useSelector((state)=>state.parkingHistory);
     const baseUrl = "https://park-it-proj.herokuapp.com/";
     const userData = useSelector((state)=>state.userData);
+    const fetchTheParkingHistory = async()=>{
+        const token = await AsyncStorage.getItem("token");
+        await axios.post(`${baseUrl}user/history`,{},{
+            headers: {
+                Authorization: "Bearer "+token,
+            }
+        }).then((resp)=>{
+            console.log("The result of the parking history: ",resp.data);
+            updateParkingHistory(parkingHistoryConstants.PARKING_HISTORY_UPDATE_COMPLETE,resp.data.reverse());
+        }).catch((err)=>{
+            console.log("The error: ",err);
+        });
+    }
     const fetchData = async()=>{
         const token = await AsyncStorage.getItem("token");
         await axios.post(`${baseUrl}user/profile`,{},{
@@ -33,6 +50,7 @@ const MainScreen = (props) => {
         }).catch((err)=>{
             console.log("there some error with the data: ",err);
         });
+        await fetchTheParkingHistory();
 
     }
 
@@ -104,6 +122,7 @@ const MainScreen = (props) => {
                 <View style={styles.modalMain}>
                     <View style={styles.modalContainer}>
                         <Text style={styles.modalTitle}>This is the current booking</Text>
+                        <ParkingHistoryItem data={parkingHistory[0]} setModalVisibleOverlay={setCurrentBookingModal}/>
                         <View style={styles.modalBottom}>
                             <TouchableOpacity style={styles.modalButton} onPress={()=>setCurrentBookingModal(false)}>
                                 <Text style={styles.modalButtonText}>Cancel</Text>
@@ -126,7 +145,7 @@ const MainScreen = (props) => {
                 </View>
                 <View style={styles.profileImageContainer}>
                     <Image 
-                        source={{uri:"https://memetemplatehouse.com/wp-content/uploads/2020/05/main-toh-sirf-pati-banna-chahta-hun-shyam-hera-pheri.jpg"}}
+                        source={{uri:"https://previews.123rf.com/images/vitechek/vitechek1907/vitechek190700199/126786791-user-login-or-authenticate-icon-human-person-symbol-vector.jpg"}}
                         fadeDuration={1000}
                         style={styles.profileImage}
                         resizeMode="cover"
@@ -152,7 +171,11 @@ const MainScreen = (props) => {
                     <Text style={styles.buttonText}>Book a car service</Text>
                     <Entypo name="tools" size={24} color="#ccc" />
                 </MainScreenButton>
-                <MainScreenButton width={Dimensions.get("window").width*0.8} onPress={()=>setCurrentBookingModal(true)}>
+                <MainScreenButton width={Dimensions.get("window").width*0.8} onPress={()=>{
+                        if(parkingHistory!==[]){
+                            setCurrentBookingModal(true)
+                        }
+                    }}>
                     <Text style={styles.buttonText}>Current Booking Details</Text>
                     <AntDesign name="tag" size={24} color="#ccc" />
                 </MainScreenButton>

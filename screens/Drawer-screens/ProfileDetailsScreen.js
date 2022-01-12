@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, {useEffect, useState} from 'react'
 import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View, Keyboard, ScrollView, Modal, Button, Alert} from 'react-native'
 import { TextInput } from 'react-native-gesture-handler';
@@ -8,11 +9,40 @@ import DefaultText from '../../components/DefaultText';
 import MenuButton from '../../components/MenuButton';
 import updateUserData from '../../redux/actions/userDataActions';
 import { userDataConstants } from '../../redux/actionTypes/userDataConstants';
-import { store } from '../../redux/store';
-
+import { store } from '../../redux/store'; 
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import UserImage from "../../assets/images/user_icon.svg"
 const ProfileDetailsScreen = (props) => {
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
     const userData = useSelector((state)=>state.userData);
+    const [userName, setUserName] = useState(null);
+    const [passwordValue, setPasswordValue] = useState(null);
+    const [email, setEmail] = useState(null);
+    const [phno, setPhno] = useState(null);
+    const baseUrl = "https://park-it-proj.herokuapp.com/";
+    const updateUserData = async()=>{
+        const token = await AsyncStorage.getItem("token");
+        await axios.post(`${baseUrl}user/update/`,{
+            name: userName,
+            email: email,
+            password: passwordValue,
+            phone: "9036206110"
+        },{
+            headers: {
+                Authorization: "Bearer "+ token,
+            }
+        }).then((resp)=>{
+            console.log(resp);
+        }).catch((err)=>{
+            console.log("There some error : ", err);
+        });
+    }
+    useEffect(()=>{
+        setUserName(userData.name);
+        setEmail(userData.email);
+        setPhno(userData.phone);
+    },[userData]);
+
     const changeUserPassword = ()=>{
         console.log("The user password changed")
         if(password !==confirmPassword){
@@ -23,19 +53,20 @@ const ProfileDetailsScreen = (props) => {
                 }
             ])
         }else{
-            // updateUserData()
+            setPasswordValue(password);
+            updateUserData()
         }
         setModalVisible(false);
     }
     const changeInFirstName = (value)=>{
         console.log(value);
         updateUserData(userDataConstants.USER_DATA_UPDATE_NAME, value);
-        console.log(store.getState());
+        // console.log(store.getState());
     }
     const changeInEmail = (value)=>{
         console.log(value);
         updateUserData(userDataConstants.USER_DATA_UPDATE_EMAIL, value);
-        console.log(store.getState());
+        // console.log(store.getState());
     }
 
     useEffect(() => {
@@ -102,7 +133,7 @@ const ProfileDetailsScreen = (props) => {
                         <View>
                     <View style={styles.doubleBorder}>
                         <View style={styles.profileImageContainer}>
-                            <Image source={{ uri: "https://memetemplatehouse.com/wp-content/uploads/2020/05/main-toh-sirf-pati-banna-chahta-hun-shyam-hera-pheri.jpg" }}
+                            <Image source={{ uri: "https://previews.123rf.com/images/vitechek/vitechek1907/vitechek190700199/126786791-user-login-or-authenticate-icon-human-person-symbol-vector.jpg" }}
                             fadeDuration={1000}
                             style={styles.profileImage}
                             resizeMode="cover"
@@ -116,7 +147,7 @@ const ProfileDetailsScreen = (props) => {
                 }
             <View style={styles.userDataFields}>
                 <View style={styles.inputContainer}>
-                    <Text style={styles.inputLabel}>First Name</Text>
+                    <Text style={styles.inputLabel}>Username</Text>
                     <CustomTextInput placeholder={"Enter your First name.."} defaultValue={ userData!=={} && userData.name[0].toUpperCase()+userData.name.slice(1) || "User"} onChangeHandler={changeInFirstName}/>
                 </View>
                 <View style={styles.inputContainer}>
@@ -127,8 +158,10 @@ const ProfileDetailsScreen = (props) => {
                     <Text style={styles.changePasswordText}>Change Password</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.changePassword} >
-                    <Text style={styles.changePasswordText}>Save Change</Text>
+                <TouchableOpacity style={styles.changePassword} onPress={()=>{
+                    props.navigation.navigate("Home");
+                }}>
+                    <Text style={styles.changePasswordText}>Save Changes</Text>
                 </TouchableOpacity>
             </View>
         </ScrollView>

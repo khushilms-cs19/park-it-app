@@ -142,7 +142,7 @@ const LocationSelectScreen = (props) => {
                     </View>
                     <View style={styles.profileImageContainer}>
                         <Image
-                            source={{ uri: "https://memetemplatehouse.com/wp-content/uploads/2020/05/main-toh-sirf-pati-banna-chahta-hun-shyam-hera-pheri.jpg" }}
+                            source={{ uri: "https://previews.123rf.com/images/vitechek/vitechek1907/vitechek190700199/126786791-user-login-or-authenticate-icon-human-person-symbol-vector.jpg" }}
                             fadeDuration={1000}
                             style={styles.profileImage}
                             resizeMode="cover"

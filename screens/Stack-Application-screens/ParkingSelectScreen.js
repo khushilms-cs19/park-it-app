@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View, Button, Dimensions, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, Button, Dimensions, ScrollView, ActivityIndicator, Alert } from 'react-native'
 import RNDateTimeSelector from 'react-native-date-time-scroll-picker'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Entypo } from '@expo/vector-icons';
@@ -12,6 +12,7 @@ import AppLoading from 'expo-app-loading';
 import updateBookingDetails from '../../redux/actions/bookingDetailsActions';
 import { bookingDetailsConstants } from '../../redux/actionTypes/bookingDetailsConstants';
 import DateTimePicker from '@react-native-community/datetimepicker';
+
 
 const ParkingSelectScreen = (props) => {
     const baseUrl = "https://park-it-proj.herokuapp.com/";
@@ -30,6 +31,19 @@ const ParkingSelectScreen = (props) => {
             updateBookingDetails(bookingDetailsConstants.BOOKING_DETAILS_LOCATION, resp.data._id);
         }).catch((err)=>{
             console.log("there was some error with location details: ",err);
+            setErrorOccured(true);
+            setTimeout(()=>{
+                Alert.alert("Some error occured. Try again later!!","",[
+                    {
+                        text: "Okay",
+                        onPress: ()=>{
+                            setDataLoaded(false);
+                            setErrorOccured(false);
+                            props.navigation.pop();
+                        }
+                    }
+                ])
+            },2000);
         })
     }
     const selectedLocationName = props.navigation.getParam("selectedLocationName");
@@ -45,6 +59,7 @@ const ParkingSelectScreen = (props) => {
     const [showEndTimeSelector, setShowEndTimeSelector] = useState(false);
     const [date, setDate] = useState(new Date(1598051730000));
     const bookingDetails = useSelector((state)=>state.bookingDetails);
+    const [errorOccured, setErrorOccured] = useState(false);
     let startTime = "";
     let endTime = "";
     const timeChangeHandlerStart = (value)=>{
@@ -75,6 +90,11 @@ const ParkingSelectScreen = (props) => {
     },[])
     if(!dataLoaded){
         return <AppLoading startAsync={fetchParkingLotDetails} onFinish={()=>setDataLoaded(true) } onError={(err)=>console.log(err)}/>
+    }
+    if(errorOccured){
+        return <View style={styles.errorScreen}>
+            <ActivityIndicator size={"large"} color={"black"}/>
+        </View>
     }
     return (
         // <View style={styles.screen}>
@@ -349,6 +369,11 @@ const styles = StyleSheet.create({
         fontFamily: "open-sans-bold",
         fontSize: 15,
         padding: 10,
+    },
+    errorScreen:{
+        justifyContent: "center",
+        alignItems: "center",
+        flex:1,
     }
 
 })

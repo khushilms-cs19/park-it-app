@@ -11,6 +11,7 @@ import { parkingHistoryConstants } from '../../redux/actionTypes/parkingHistoryC
 
 const ParkingHistoryScreen = (props) => {
     const [dataLoaded , setDataLoaded ] = useState(false);
+    const [fetchingNewData, setFetchingNewData ] = useState(false);
     const baseUrl= "https://park-it-proj.herokuapp.com/";
     const fetchTheParkingHistory = async()=>{
         const token = await AsyncStorage.getItem("token");
@@ -20,6 +21,7 @@ const ParkingHistoryScreen = (props) => {
             }
         }).then((resp)=>{
             console.log("The result of the parking history: ",resp.data);
+            setFetchingNewData(false);
             updateParkingHistory(parkingHistoryConstants.PARKING_HISTORY_UPDATE_COMPLETE,resp.data.reverse());
         }).catch((err)=>{
             console.log("The error: ",err);
@@ -74,6 +76,11 @@ const ParkingHistoryScreen = (props) => {
                         return <ParkingHistoryItem data={item.item} setModalVisibleOverlay={setModalVisibleOverlay}/>
                     }}
                     keyExtractor={(item, index)=>index}
+                    onRefresh={()=>{
+                        setFetchingNewData(true);
+                        fetchTheParkingHistory();
+                    }}
+                    refreshing={fetchingNewData}
                 />
             </View>
         </View>
