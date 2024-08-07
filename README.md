@@ -1,6 +1,19 @@
 # Park-it App
 This is a application that allows users to reserve parking spots.
 
+## Screenshots
+![image22](https://github.com/user-attachments/assets/34641aee-560a-4dc6-85db-0c6038a28783)
+
+![image26](https://github.com/user-attachments/assets/dcc7c744-d77b-46a6-a513-c456e459d14a)
+
+![image27](https://github.com/user-attachments/assets/d4069b4d-19cc-4daf-8321-58d2043a2e51)
+
+![image10](https://github.com/user-attachments/assets/06fccc1c-a119-4dea-873a-8c2bc18a0ce6)
+
+![image11](https://github.com/user-attachments/assets/601b6da5-d146-436b-99cf-1d5a6b1b7fc8)
+
+![image14](https://github.com/user-attachments/assets/8e526f5c-676f-4879-8b3e-4326fc5cee13)
+
 ## Instructions to Run
 After cloning the repo,
             
